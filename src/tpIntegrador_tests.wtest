@@ -1,0 +1,5 @@
+import tpIntegrador.*
+
+test "Test de prueba" {
+	assert.equals(4, 2 + 2)
+}
