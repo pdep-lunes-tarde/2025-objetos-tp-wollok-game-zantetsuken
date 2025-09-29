@@ -76,10 +76,23 @@ object configurador{
 	}
 	// debe cambiarse para atacar a alguien que se determine
 	method activarAcciones(){
-		keyboard.z().onPressDo {turnero.personajeActivo().ataqueBasico(pepitaRival)
-			self.desactivarAcciones()}
+		io.clear()
+		const atacante = turnero.personajeActivo()
+		keyboard.z().onPressDo {self.seleccionarRival({rival => atacante.ataqueBasico(rival)})}
 		
-		keyboard.x().onPressDo {turnero.personajeActivo().ataqueEspecial(pepitaRival)}
+		keyboard.x().onPressDo {self.seleccionarRival({rival => atacante.ataqueEspecial(rival)})}
+	}
+
+	method seleccionarRival(accion) {
+		self.desactivarAcciones()
+		keyboard.num1().onPressDo {self.desactivarAcciones()
+			accion.apply(turnero.enemigos().get(0))}
+		keyboard.num2().onPressDo {self.desactivarAcciones()
+			accion.apply(turnero.enemigos().get(1))}
+		keyboard.num3().onPressDo {self.desactivarAcciones()
+			accion.apply(turnero.enemigos().get(2))}
+		keyboard.c().onPressDo {self.desactivarAcciones()
+			self.activarAcciones()}
 	}
 
 	method desactivarAcciones(){

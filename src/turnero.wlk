@@ -15,6 +15,7 @@ object turnero {
         enemigos.forEach {enemigo => self.agregarPersonaje(enemigo)}
         configurador.mostrarPersonajes()
         self.ordenarTurnos()
+        self.correrTurno()
     }
     method agregarPersonaje(personaje){
         turnos.add(personaje)
