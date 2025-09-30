@@ -1,8 +1,8 @@
 import src.gestorDeVida.*
 import src.gameManager.*
+import personajes.*
 import seleccionador.*
 import wollok.game.*
-import enemigos.*
 import turnero.*
 
 class Aliado inherits Criatura {

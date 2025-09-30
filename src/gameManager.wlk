@@ -1,7 +1,7 @@
 import src.gestorDeVida.*
-import enemigos.*
+import criaturas.*
 import otroEvento.*
-import pepita.*
+import aliados.*
 import seleccionador.*
 import wollok.game.*
 import turnero.*

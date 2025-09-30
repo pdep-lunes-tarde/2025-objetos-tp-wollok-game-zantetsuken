@@ -1,6 +1,6 @@
 import src.gameManager.*
-import enemigos.*
-import pepita.*
+import personajes.*
+import aliados.*
 
 object turnero {
     var property turnos = []

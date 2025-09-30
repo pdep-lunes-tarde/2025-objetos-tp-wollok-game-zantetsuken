@@ -1,6 +1,6 @@
 import seleccionador.*
 import wollok.game.*
-import pepita.*
+import aliados.*
 import turnero.*
 import gestorDeVida.*
 import gameManager.*
