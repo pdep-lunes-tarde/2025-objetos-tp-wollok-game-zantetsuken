@@ -49,3 +49,8 @@ object derecha {
         return posicion.right(2)
     }
 }
+
+object primerPantalla {
+    const property position = game.at(0,0)
+    method image() = "primerPantalla.gif"
+}

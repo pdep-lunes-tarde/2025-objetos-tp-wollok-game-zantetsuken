@@ -5,43 +5,55 @@ import wollok.game.*
 import enemigos.*
 import turnero.*
 
-object pepita {
-	var property salud = 20
-    const property velocidad = 4
-	var property position = game.at(3,3)
-	method image() = "pepita.png"
-	const property medidorDeSalud = new MedidorDeVida(usuario = self)
-
-	method moverse(direccion) {
-		position = position.direccion(1)
+class Aliado inherits Criatura {
+	override method empezarTurno() {
+		io.clear()
+		keyboard.z().onPressDo {configurador.seleccionarRival({rival => self.ataqueBasico(rival)})}
 	}
+
+}
+
+object pepita inherits Aliado (salud = 20, saludMaxima = 20, velocidad = 4, position = game.at(3,3)){
+	
+	override method image() = "pepita.png"
 	
 	// se encuentra hardcodeado para atacar siempre a pepitaRival, revisar el gameManager
-	method ataqueBasico(rival){
+	override method ataqueBasico(rival){
 		rival.daniar(5)
 		turnero.pasarTurno()
-	}	
+	}
 
-	method ataqueEspecial(rival) {
-		rival.salud(0)
+	override method ataqueEspecial(rival) {
+		rival.matar()
+		turnero.pasarTurno()
+	}
+	override method empezarTurno(){
+		super()
+		keyboard.x().onPressDo {configurador.seleccionarRival({rival => self.ataqueEspecial(rival)})}
+	}
+}
+
+object soifong inherits Aliado (salud = 15, saludMaxima = 15, velocidad = 2, position = game.at(3,5),
+	medidorDeSalud = new MedidorDeVida(usuario = self)){
+	var letalidad = 2
+	override method image() = "pepita2.png"
+	method letalidad() = letalidad
+	method aumentarLetalidad(){
+		letalidad += 2
+	}
+	override method ataqueBasico(rival){
+		rival.daniar(letalidad)
 		turnero.pasarTurno()
 	}
 
-	method empezarTurno() {
-		configurador.activarAcciones()
+	override method ataqueEspecial(rival) {
+		self.aumentarLetalidad()
+		turnero.pasarTurno()
 	}
 
-	method fullVida(){
-		self.salud(self.saludMaxima())
+	override method empezarTurno(){
+		super()
+		keyboard.x().onPressDo {self.ataqueEspecial(self)}
 	}
 
-	method daniar(danio) {
-		self.salud(self.salud()-danio)
-	}
-	method saludMaxima() {
-		return 20
-	}
-	method curar(cantidad){
-		gestorDeVida.curacionNormal(self, cantidad)
-	}
 }

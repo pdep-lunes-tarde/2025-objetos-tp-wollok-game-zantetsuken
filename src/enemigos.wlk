@@ -3,83 +3,64 @@ import wollok.game.*
 import pepita.*
 import turnero.*
 import gestorDeVida.*
+import gameManager.*
 
-object pepitaRival {
-    const property velocidad = 2
-	var property salud = 10
-	var property position = new Position(x = 8,y = 9)
-	method image() = "pepita1.png"
+class Criatura {
+	var salud
+	const property saludMaxima
+    const property velocidad 
+	var property position
 	const property medidorDeSalud = new MedidorDeVida(usuario = self)
-
-	method moverse(direccion) {
-		position = position.direccion(1)
-	}
-
-    method ataqueBasico(rival){
-		rival.salud(rival.salud()-2)
-		turnero.pasarTurno()
-	}
-
-	method empezarTurno() { //determina un rival de forma aleatoria, funciona correctamente
-		const objetivo = turnero.aliados().anyOne()
-		self.ataqueBasico(objetivo)
-	}
-
-	method fullVida() {
-		self.salud(self.saludMaxima())
+	method image() 
+	method salud() {
+		return salud
 	}
 	
-	method daniar(danio) {
-		self.salud(self.salud()-danio)
+	method ataqueBasico(rival){
 	}
 
+	method ataqueEspecial(rival) {
+	}
+
+	method fullVida(){
+		salud = self.saludMaxima()
+	}
+
+	method daniar(danio) {
+		salud = (self.salud()-danio).max(0)
+	}
 	method curar(cantidad){
 		gestorDeVida.curacionNormal(self, cantidad)
 	}
+	method matar(){
+		salud = 0
+	}
+	method empezarTurno(){
 
-	method saludMaxima() {
-		return 10
+	}
+}
+class Enemigo inherits Criatura (position= new Position(x = 7,y = 0)){ 
+	override method empezarTurno() { //determina un rival de forma aleatoria, funciona correctamente
+		const objetivo = turnero.aliados().anyOne()
+		self.ataqueBasico(objetivo)
+		turnero.pasarTurno()
+	}
+}
+object pepitaRival inherits Enemigo(velocidad = 2, salud = 10, saludMaxima = 10) {
+	override method image() = "pepita1.png"
+    override method ataqueBasico(rival){
+		rival.daniar(2)
 	}
 }
 
-object zombie {
-    const property velocidad = 1
-	var property salud = 6
-	var property position = new Position(x = 8, y = 10)
-	method image() = "zombie.png"
-	const property medidorDeSalud = new MedidorDeVida(usuario = self)	
+object zombie inherits Enemigo(velocidad = 1, salud = 6, saludMaxima = 6) {
+	override method image() = "zombie.png"	
 
-	method moverse(direccion) {
-		position = position.direccion(1)
-	}
-	
-	method move(nuevaPosicion) {
-		self.position(nuevaPosicion)
-	}	
-
-    method ataqueBasico(rival){
-		rival.daniar(2)
-		turnero.pasarTurno()
+    override method ataqueBasico(rival){
+		rival.daniar(4)
 	}
 
-	method empezarTurno() {
-		const objetivo = turnero.aliados().anyOne()
-		self.ataqueBasico(objetivo)
-	}
-
-	method fullVida() {
-		self.salud(self.saludMaxima())
-	}
-
-	method daniar(danio) {
-		self.salud(self.salud()-danio)
-	}
-
-	method curar(cantidad) {
+	override method curar(cantidad) {
 		self.daniar(cantidad * 2)
-	}
-	
-	method saludMaxima() {
-		return 6
 	}
 }

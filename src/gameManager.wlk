@@ -41,16 +41,18 @@ object configurador{
 	}
 
 	method primerPantalla(){
-		game.title("Pepita")
+		game.title("PrimerPantalla")
 		game.height(self.alto())
 		game.width(self.ancho())
 		game.ground("suelo.png")
+		game.addVisual(primerPantalla)
 
 		keyboard.enter().onPressDo {game.clear()
-			self.inicializar()
+			self.activarCombate()
 		}
 	}
-    method inicializar(){
+    //Ahora mismo este metodo está inutilizado ya que de primer pantalla salta directamente a "activarCombate"
+	method inicializar(){ 
 
     //	CONFIG	
 	//	VISUALES
@@ -75,13 +77,18 @@ object configurador{
 		turnero.empezarCombate()
 	}
 	// debe cambiarse para atacar a alguien que se determine
+
 	method activarAcciones(){
+	}
+	method activarAccionesPepita(){
 		io.clear()
 		const atacante = turnero.personajeActivo()
 		keyboard.z().onPressDo {self.seleccionarRival({rival => atacante.ataqueBasico(rival)})}
 		
 		keyboard.x().onPressDo {self.seleccionarRival({rival => atacante.ataqueEspecial(rival)})}
 	}
+
+	
 
 	method seleccionarRival(accion) {
 		self.desactivarAcciones()

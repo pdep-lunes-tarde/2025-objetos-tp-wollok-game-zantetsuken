@@ -6,7 +6,7 @@ object turnero {
     var property turnos = []
     var property turnoActual = 0
     var property enemigos = [pepitaRival, zombie]
-    var property aliados = [pepita]
+    var property aliados = [pepita, soifong]
     const property posicionesEnemigas = [8, 10]
 
     method empezarCombate(){
