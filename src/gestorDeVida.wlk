@@ -20,3 +20,4 @@ class MedidorDeVida {
 		return "" + usuario.salud() + " / " + usuario.saludMaxima()
 	}
 }
+

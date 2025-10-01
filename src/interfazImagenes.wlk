@@ -5,7 +5,6 @@ object seleccionador {
 	var posicion = new Position(x=3, y=3)
 	method image() = "seleccionadorCuadradoA.png"
 
-
 	method position() {
         return posicion
     }

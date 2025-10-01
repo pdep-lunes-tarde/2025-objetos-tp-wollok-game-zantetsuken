@@ -1,8 +1,8 @@
 import src.gestorDeVida.*
-import criaturas.*
+import personajes.*
 import otroEvento.*
 import aliados.*
-import seleccionador.*
+import interfazImagenes.*
 import wollok.game.*
 import turnero.*
 object gameManager {
@@ -25,12 +25,8 @@ object home {
 	const property image = "fondo.jpg"
 	const property position = game.at(0, 0)
 }
-object juegoRpg {
-	
-
-}
 object configurador{
-	var property indicador = 3
+	var property indicador = 2
 	
 	method ancho() {
 		return 10
@@ -56,11 +52,9 @@ object configurador{
 
     //	CONFIG	
 	//	VISUALES
-		game.addVisual(pepita)
 		game.addVisual(seleccionador)
 
 	//	TECLADO
-		keyboard.h().onPressDo { game.say(pepita, "Hola chiques!") }
 
 		keyboard.r().onPressDo {io.removeEventHandler(['keypress',"ArrowRight"])}
 		keyboard.e().onPressDo {io.removeEventHandler(['keypress',"ArrowLeft"])}
@@ -88,15 +82,13 @@ object configurador{
 		keyboard.x().onPressDo {self.seleccionarRival({rival => atacante.ataqueEspecial(rival)})}
 	}
 
-	
-
 	method seleccionarRival(accion) {
 		self.desactivarAcciones()
-		keyboard.num1().onPressDo {self.desactivarAcciones()
+		keyboard.a().onPressDo {self.desactivarAcciones()
 			accion.apply(turnero.enemigos().get(0))}
-		keyboard.num2().onPressDo {self.desactivarAcciones()
+		keyboard.s().onPressDo {self.desactivarAcciones()
 			accion.apply(turnero.enemigos().get(1))}
-		keyboard.num3().onPressDo {self.desactivarAcciones()
+		keyboard.d().onPressDo {self.desactivarAcciones()
 			accion.apply(turnero.enemigos().get(2))}
 		keyboard.c().onPressDo {self.desactivarAcciones()
 			self.activarAcciones()}
@@ -105,9 +97,11 @@ object configurador{
 	method desactivarAcciones(){
 		io.clear()
 	}
-
-	method desactivarEnemigo(enemigo){
-		game.removeVisual(enemigo)
+	method activarCriatura(criatura){
+		game.addVisual(criatura)
+	}
+	method desactivarCriatura(criatura){
+		game.removeVisual(criatura)
 	}
 
 	method mostrarPersonajes(){
@@ -116,12 +110,12 @@ object configurador{
 		turnero.turnos().forEach({personaje => game.addVisual(personaje.medidorDeSalud())})
 	}
 	method cambiarPosiciones(enemigo){
-		enemigo.position(new Position(x = 8, y = indicador))
+		enemigo.position(game.at(7,indicador))
 		indicador += 3
 	}
 
 	method jugar(){
 		self.primerPantalla()
 		game.start()
-	}
+	}	
 }

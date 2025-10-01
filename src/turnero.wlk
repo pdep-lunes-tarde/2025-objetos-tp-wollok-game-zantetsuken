@@ -5,8 +5,8 @@ import aliados.*
 object turnero {
     var property turnos = []
     var property turnoActual = 0
-    var property enemigos = [pepitaRival, zombie]
-    var property aliados = [pepita, soifong]
+    var property enemigos = [pepita, zombie]
+    var property aliados = [knight, soifong]
     const property posicionesEnemigas = [8, 10]
 
     method empezarCombate(){
@@ -15,6 +15,7 @@ object turnero {
         enemigos.forEach {enemigo => self.agregarPersonaje(enemigo)}
         configurador.mostrarPersonajes()
         self.ordenarTurnos()
+        indicadorTurno.activar()
         self.correrTurno()
     }
     method agregarPersonaje(personaje){
@@ -29,7 +30,7 @@ object turnero {
     }
 
     method correrTurno(){
-        if(self.personajeActivo().salud() <= 0){
+        if(self.personajeActivo().salud() == 0){
             self.pasarTurno()
         } else {
             self.personajeActivo().empezarTurno()
@@ -64,6 +65,8 @@ object turnero {
         turnos.forEach({personaje => personaje.fullVida()})
         self.turnos().clear()
     }
+    
+   
 }
 
 object activarAcciones {
@@ -76,4 +79,13 @@ object activarAcciones {
 
     method destruir(rival) { 
     }
+}
+
+object indicadorTurno {
+	method position() = game.at(7,0)
+	
+	method text() = "Le toca el turno a " + turnero.personajeActivo()
+	method activar(){
+		game.addVisual(self)
+	}
 }
