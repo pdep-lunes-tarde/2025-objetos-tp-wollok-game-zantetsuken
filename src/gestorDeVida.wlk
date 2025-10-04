@@ -11,13 +11,9 @@ object gestorDeVida {
 
 class MedidorDeVida {
 	const usuario
-	method position() {
-		return game.at(usuario.position().x(), usuario.position().y() - 1)
-	}
+	method position() = game.at(usuario.position().x(), usuario.position().y() - 1)
 
 //No logre hacer que funcione al enviar los datos
-	method text() {
-		return "" + usuario.salud() + " / " + usuario.saludMaxima()
-	}
+	method text() = "" + usuario.salud() + " / " + usuario.saludMaxima()
 }
 

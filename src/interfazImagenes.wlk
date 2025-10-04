@@ -2,12 +2,11 @@ import src.gameManager.*
 import wollok.game.*
 
 object seleccionador {
-	var posicion = new Position(x=3, y=3)
+	var posicion = new Position(x=2, y=2)
 	method image() = "seleccionadorCuadradoA.png"
 
-	method position() {
-        return posicion
-    }
+	method position() = posicion
+
 	method position(nuevaPosicion) {
         posicion = nuevaPosicion
     }
@@ -24,6 +23,11 @@ object seleccionador {
 
         return new Position(x=nuevaX, y=nuevaY)
     }
+
+    method activarInteracciones(){
+        configurador.desactivarAcciones()
+        game.onCollideDo(self, {otro => otro.activasteAccion()})
+    }
 }
 
 object wraparound {
@@ -39,14 +43,10 @@ object wraparound {
 }
 
 object izquierda {
-    method siguientePosicion(posicion) {
-        return posicion.left(2)
-    }
+    method siguientePosicion(posicion) = posicion.left(2)
 }
 object derecha {
-    method siguientePosicion(posicion) {
-        return posicion.right(2)
-    }
+    method siguientePosicion(posicion) = posicion.right(2)
 }
 
 object primerPantalla {

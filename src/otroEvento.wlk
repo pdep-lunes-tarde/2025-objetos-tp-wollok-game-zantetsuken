@@ -17,7 +17,6 @@ object manager {
             game.removeVisual(fondoEvento)
         }
 	}
-
 }
 
 object fondoEvento {

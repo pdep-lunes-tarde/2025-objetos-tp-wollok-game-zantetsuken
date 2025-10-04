@@ -1,3 +1,4 @@
+import src.interfazImagenes.*
 import src.gameManager.*
 import personajes.*
 import aliados.*
@@ -25,9 +26,7 @@ object turnero {
         turnos = turnos.sortedBy({a, b => a.velocidad() > b.velocidad()})
     }
 
-    method personajeActivo(){
-        return self.turnos().get(self.turnoActual())
-    }
+    method personajeActivo() = self.turnos().get(self.turnoActual())
 
     method correrTurno(){
         if(self.personajeActivo().salud() == 0){
@@ -37,36 +36,35 @@ object turnero {
         }
     }
 
-    method tamanioDelCombate(){
-        return enemigos.size() + aliados.size() -1
-    }
+    method tamanioDelCombate() = enemigos.size() + aliados.size() -1
 
-    method corroborarEstado(){
-        if(enemigos.all({enemigo => enemigo.salud() <= 0})) {
+    
+
+    method pasarTurno() {
+        if(enemigos.all({enemigo => enemigo.salud() == 0})) {
+            game.removeVisual(indicadorTurno)
             self.combateVictorioso()
-        } else if (aliados.all({aliado => aliado.salud() <= 0})) {
+        } else if (aliados.all({aliado => aliado.salud() == 0})) {
             self.combateVictorioso()
+            game.removeVisual(indicadorTurno)
         } else {
+            self.ciclarTurnos()
             self.correrTurno()
         }
     }
-
-    method pasarTurno() {
-        configurador.desactivarAcciones()
+    method ciclarTurnos(){
         if (turnoActual == self.tamanioDelCombate()){
-        self.turnoActual(0)
+            self.turnoActual(0)
         }else{
-        self.turnoActual(turnoActual+1)    
-        } 
-        self.corroborarEstado()
+            self.turnoActual(turnoActual+1)    
+        }
     }
 
     method combateVictorioso() {
         turnos.forEach({personaje => personaje.fullVida()})
         self.turnos().clear()
+        configurador.primerPantalla()
     }
-    
-   
 }
 
 object activarAcciones {

@@ -16,7 +16,7 @@ object gameManager {
  		}
 
         keyboard.z().onPressDo {
-            configurador.inicializar()
+            configurador.inicializarJuego()
         }
     }
 }
@@ -28,27 +28,25 @@ object home {
 object configurador{
 	var property indicador = 2
 	
-	method ancho() {
-		return 10
-	}
+	method ancho() = 10
 
-	method alto() {
-		return 10
-	}
+	method alto() = 10
 
 	method primerPantalla(){
+		game.addVisual(primerPantalla)
+	//ahora activa el seelccionador para probarlo
+		game.addVisual(knight)
+		keyboard.enter().onPressDo {self.inicializarSeleccionador()	}
+	}
+    //Ahora mismo este metodo está inutilizado ya que de primer pantalla salta directamente a "activarCombate"
+	method inicializarJuego(){
 		game.title("PrimerPantalla")
 		game.height(self.alto())
 		game.width(self.ancho())
 		game.ground("suelo.png")
-		game.addVisual(primerPantalla)
-
-		keyboard.enter().onPressDo {game.clear()
-			self.activarCombate()
-		}
 	}
-    //Ahora mismo este metodo está inutilizado ya que de primer pantalla salta directamente a "activarCombate"
-	method inicializar(){ 
+	
+	method inicializarSeleccionador(){ 
 
     //	CONFIG	
 	//	VISUALES
@@ -63,6 +61,7 @@ object configurador{
 		keyboard.right().onPressDo {seleccionador.moverse(derecha)}
         keyboard.left().onPressDo {seleccionador.moverse(izquierda)}
 		keyboard.enter().onPressDo {self.activarCombate()}
+		seleccionador.activarInteracciones()
 
     }
 
@@ -72,27 +71,29 @@ object configurador{
 	}
 	// debe cambiarse para atacar a alguien que se determine
 
-	method activarAcciones(){
-	}
-	method activarAccionesPepita(){
-		io.clear()
-		const atacante = turnero.personajeActivo()
-		keyboard.z().onPressDo {self.seleccionarRival({rival => atacante.ataqueBasico(rival)})}
-		
-		keyboard.x().onPressDo {self.seleccionarRival({rival => atacante.ataqueEspecial(rival)})}
-	}
-
 	method seleccionarRival(accion) {
 		self.desactivarAcciones()
-		keyboard.a().onPressDo {self.desactivarAcciones()
-			accion.apply(turnero.enemigos().get(0))}
-		keyboard.s().onPressDo {self.desactivarAcciones()
-			accion.apply(turnero.enemigos().get(1))}
-		keyboard.d().onPressDo {self.desactivarAcciones()
-			accion.apply(turnero.enemigos().get(2))}
+		var objetivo = null
+		keyboard.a().onPressDo {objetivo = turnero.enemigos().get(0)
+			self.corroborarAtaque(objetivo, accion)}
+		keyboard.s().onPressDo {objetivo = turnero.enemigos().get(1)
+			self.corroborarAtaque(objetivo, accion)}
+		keyboard.d().onPressDo {objetivo = turnero.enemigos().get(2)
+			self.corroborarAtaque(objetivo, accion)}
 		keyboard.c().onPressDo {self.desactivarAcciones()
-			self.activarAcciones()}
+			turnero.personajeActivo().activarAcciones()}
 	}
+	method corroborarAtaque(objetivo, accion) {
+        self.desactivarAcciones()
+        if (objetivo.salud() == 0) {
+			const atacante = turnero.personajeActivo()
+			game.say(atacante, "No puedo atacar a un muerto")
+			atacante.empezarTurno()
+		} else if (objetivo.salud() > 0){
+			accion.apply(objetivo)
+			game.schedule(7000, {turnero.pasarTurno()})
+		}
+    }
 
 	method desactivarAcciones(){
 		io.clear()
@@ -115,6 +116,7 @@ object configurador{
 	}
 
 	method jugar(){
+		self.inicializarJuego()
 		self.primerPantalla()
 		game.start()
 	}	

@@ -8,8 +8,8 @@ import turnero.*
 class Aliado inherits Criatura {
 	override method empezarTurno() {
 		keyboard.z().onPressDo {configurador.desactivarAcciones()
-			configurador.seleccionarRival({rival => self.ataqueBasico(rival)
-			game.schedule(7000, {turnero.pasarTurno()})})}
+			configurador.seleccionarRival({rival => self.ataqueBasico(rival)})
+		}
 	}
 
 }
@@ -35,9 +35,12 @@ object knight inherits Aliado (salud = 20, saludMaxima = 20, velocidad = 4, posi
 	}
 	override method empezarTurno(){
 		super()
-		keyboard.x().onPressDo {configurador.desactivarAcciones()
-			configurador.seleccionarRival({rival => self.ataqueEspecial(rival)
-			game.schedule(7000, {turnero.pasarTurno()})})}
+		keyboard.x().onPressDo {
+			configurador.seleccionarRival({rival => self.ataqueEspecial(rival)})}
+	}
+
+	method activasteAccion(){
+        keyboard.z().onPressDo{game.addVisual(soifong)}
 	}
 }
 
@@ -67,16 +70,7 @@ object soifong inherits Aliado (salud = 15, saludMaxima = 15, velocidad = 2, pos
 		super()
 		keyboard.x().onPressDo {configurador.desactivarAcciones()
 			self.ataqueEspecial(self)
-			game.schedule(7000, {turnero.pasarTurno()})}
+			game.schedule(7000, {turnero.pasarTurno()})
+		}
 	}
-}
-
-object soifongAtaque{
-	method image() = "soifonAtaque.png"
-	const property position = soifong.position()
-}
-
-object knightAtaque{
-	method image() = "knightAtaque.png"
-	const property position = knight.position()
 }

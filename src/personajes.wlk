@@ -13,9 +13,7 @@ class Criatura {
 	const property medidorDeSalud = new MedidorDeVida(usuario = self)
 	var property imagen
 	
-	method salud() {
-		return salud
-	}
+	method salud() = salud
 	
 	method ataqueBasico(rival)
 
@@ -57,6 +55,7 @@ class Criatura {
 		self.cambiarImagenAtaque()
 		game.schedule(2000, {self.cambiarImagenNormal()})
 	}
+	
 }
 class Enemigo inherits Criatura (position = game.at(7,0)){ 
 	override method empezarTurno() { //determina un rival de forma aleatoria, funciona correctamente
@@ -82,7 +81,7 @@ object pepita inherits Enemigo(velocidad = 2, salud = 10, saludMaxima = 10, imag
 }
 
 object zombie inherits Enemigo(velocidad = 1, salud = 6, saludMaxima = 6, imagen = "zombie.png") {
-		override method cambiarImagenAtaque(){
+	override method cambiarImagenAtaque(){
 		imagen = "zombieAtaque.png"
 	}
 	override method cambiarImagenNormal(){
