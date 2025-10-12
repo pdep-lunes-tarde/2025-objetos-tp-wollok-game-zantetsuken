@@ -1,4 +1,3 @@
-import src.gestorDeVida.*
 import personajes.*
 import otroEvento.*
 import aliados.*
@@ -33,10 +32,9 @@ object configurador{
 	method alto() = 10
 
 	method primerPantalla(){
+		game.clear()
 		game.addVisual(primerPantalla)
-	//ahora activa el seelccionador para probarlo
-		game.addVisual(knight)
-		keyboard.enter().onPressDo {self.inicializarSeleccionador()	}
+		keyboard.enter().onPressDo {self.activarCombate()}
 	}
     //Ahora mismo este metodo está inutilizado ya que de primer pantalla salta directamente a "activarCombate"
 	method inicializarJuego(){
@@ -58,10 +56,10 @@ object configurador{
 		keyboard.e().onPressDo {io.removeEventHandler(['keypress',"ArrowLeft"])}
 		keyboard.t().onPressDo {gameManager.mostrarMenu()}
 		
-		keyboard.right().onPressDo {seleccionador.moverse(derecha)}
-        keyboard.left().onPressDo {seleccionador.moverse(izquierda)}
+		keyboard.up().onPressDo {seleccionador.moverse(arriba)}
+        keyboard.down().onPressDo {seleccionador.moverse(abajo)}
 		keyboard.enter().onPressDo {self.activarCombate()}
-		seleccionador.activarInteracciones()
+		seleccionador.activarSeleccion()
 
     }
 
@@ -107,12 +105,17 @@ object configurador{
 
 	method mostrarPersonajes(){
 		turnero.enemigos().forEach({enemigo => self.cambiarPosiciones(enemigo)})
+		self.reiniciarIndicador() //reinicia el contador para cambiar posiciones
 		turnero.turnos().forEach({personaje => game.addVisual(personaje)})
 		turnero.turnos().forEach({personaje => game.addVisual(personaje.medidorDeSalud())})
 	}
 	method cambiarPosiciones(enemigo){
 		enemigo.position(game.at(7,indicador))
 		indicador += 3
+	}
+
+	method reiniciarIndicador(){
+		indicador = 3
 	}
 
 	method jugar(){

@@ -2,18 +2,21 @@ import interfazImagenes.*
 import wollok.game.*
 import aliados.*
 import turnero.*
-import gestorDeVida.*
 import gameManager.*
 
+class MedidorDeVida {
+	const usuario
+	method position() = game.at(usuario.position().x(), usuario.position().y() - 1)
+
+	method text() = "" + usuario.salud() + " / " + usuario.saludMaxima()
+}
 class Criatura {
-	var salud
+	var property salud
 	const property saludMaxima
     const property velocidad 
 	var property position
 	const property medidorDeSalud = new MedidorDeVida(usuario = self)
 	var property imagen
-	
-	method salud() = salud
 	
 	method ataqueBasico(rival)
 
@@ -28,7 +31,12 @@ class Criatura {
 		salud = (self.salud()-danio).max(0)
 	}
 	method curar(cantidad){
-		gestorDeVida.curacionNormal(self, cantidad)
+		const vidaPotencial = self.salud() + cantidad
+		if (vidaPotencial >= self.saludMaxima()){
+			self.fullVida()
+		} else {
+			self.salud(vidaPotencial)
+		}
 	}
 	method matar(){
 		salud = 0
@@ -64,6 +72,13 @@ class Enemigo inherits Criatura (position = game.at(7,0)){
 		game.schedule(3000, {self.ataqueBasico(objetivo)})
 		game.schedule(7000, {turnero.pasarTurno()})
 	}
+	method rivalporSeleccionar(accion){
+		io.removeEventHandler(["keypress", "KeyZ"])
+        keyboard.z().onPressDo{configurador.corroborarAtaque(self, accion)}
+	}
+	method serSeleccionado(atacante, accion){
+		atacante.accion(self)
+	}
 }
 object pepita inherits Enemigo(velocidad = 2, salud = 10, saludMaxima = 10, imagen = "pepita.png") {
 	override method cambiarImagenAtaque(){
@@ -98,3 +113,4 @@ object zombie inherits Enemigo(velocidad = 1, salud = 6, saludMaxima = 6, imagen
 		
 	}
 }
+

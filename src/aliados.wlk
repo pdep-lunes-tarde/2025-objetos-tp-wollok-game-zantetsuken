@@ -1,4 +1,3 @@
-import src.gestorDeVida.*
 import src.gameManager.*
 import personajes.*
 import interfazImagenes.*
@@ -37,10 +36,6 @@ object knight inherits Aliado (salud = 20, saludMaxima = 20, velocidad = 4, posi
 		super()
 		keyboard.x().onPressDo {
 			configurador.seleccionarRival({rival => self.ataqueEspecial(rival)})}
-	}
-
-	method activasteAccion(){
-        keyboard.z().onPressDo{game.addVisual(soifong)}
 	}
 }
 

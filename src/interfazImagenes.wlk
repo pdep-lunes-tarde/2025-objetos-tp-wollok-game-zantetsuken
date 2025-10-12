@@ -1,6 +1,6 @@
 import src.gameManager.*
 import wollok.game.*
-
+import turnero.*
 object seleccionador {
 	var posicion = new Position(x=2, y=2)
 	method image() = "seleccionadorCuadradoA.png"
@@ -18,15 +18,12 @@ object seleccionador {
 	}
 
 	method posicionCorregida(posicionACorregir) {
-        const nuevaY = wraparound.aplicarA(posicionACorregir.y(), 3, 3)
-        const nuevaX = wraparound.aplicarA(posicionACorregir.x(), 3, 7)
-
-        return new Position(x=nuevaX, y=nuevaY)
+        const nuevaY = wraparound.aplicarA(posicionACorregir.y(), turnero.enemigos().get(0), turnero.enemigos().size())
+        return new Position(x=posicion.x(), y=nuevaY)
     }
 
-    method activarInteracciones(){
-        configurador.desactivarAcciones()
-        game.onCollideDo(self, {otro => otro.activasteAccion()})
+    method activarSeleccion(){
+        game.onCollideDo(self, {otro => otro.rivalPorSeleccionar()})
     }
 }
 
@@ -42,11 +39,11 @@ object wraparound {
     }
 }
 
-object izquierda {
-    method siguientePosicion(posicion) = posicion.left(2)
+object arriba {
+    method siguientePosicion(posicion) = posicion.up(3)
 }
-object derecha {
-    method siguientePosicion(posicion) = posicion.right(2)
+object abajo {
+    method siguientePosicion(posicion) = posicion.down(3)
 }
 
 object primerPantalla {
