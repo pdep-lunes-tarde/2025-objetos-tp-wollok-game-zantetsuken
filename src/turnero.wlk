@@ -38,14 +38,12 @@ object turnero {
 
     method tamanioDelCombate() = enemigos.size() + aliados.size() -1
 
-    
-
     method pasarTurno() {
         if(enemigos.all({enemigo => enemigo.salud() == 0})) {
             game.removeVisual(indicadorTurno)
             self.combateVictorioso()
         } else if (aliados.all({aliado => aliado.salud() == 0})) {
-            self.combateVictorioso()
+            self.combateVictorioso()//atentos aca
             game.removeVisual(indicadorTurno)
         } else {
             self.ciclarTurnos()

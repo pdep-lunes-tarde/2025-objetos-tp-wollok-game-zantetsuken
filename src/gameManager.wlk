@@ -59,7 +59,7 @@ object configurador{
 		keyboard.up().onPressDo {seleccionador.moverse(arriba)}
         keyboard.down().onPressDo {seleccionador.moverse(abajo)}
 		keyboard.enter().onPressDo {self.activarCombate()}
-		seleccionador.activarSeleccion()
+		seleccionador.activarSeleccionAtaque()
 
     }
 
@@ -115,12 +115,12 @@ object configurador{
 	}
 
 	method reiniciarIndicador(){
-		indicador = 3
+		indicador = 2
 	}
 
 	method jugar(){
 		self.inicializarJuego()
-		self.primerPantalla()
+		self.inicializarSeleccionador()// modificado
 		game.start()
 	}	
 }
