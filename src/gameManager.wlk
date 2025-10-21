@@ -27,7 +27,7 @@ object home {
 object configurador{
 	var property indicador = 2
 	
-	method ancho() = 10
+	method ancho() = 15
 
 	method alto() = 10
 
@@ -65,6 +65,7 @@ object configurador{
 
 	method activarCombate(){
 		game.clear()
+		game.addVisual(feed)
 		turnero.empezarCombate()
 	}
 	// debe cambiarse para atacar a alguien que se determine
@@ -120,7 +121,8 @@ object configurador{
 
 	method jugar(){
 		self.inicializarJuego()
-		self.inicializarSeleccionador()// modificado
+		self.primerPantalla()
+		//self.inicializarSeleccionador()// modificado
 		game.start()
 	}	
 }

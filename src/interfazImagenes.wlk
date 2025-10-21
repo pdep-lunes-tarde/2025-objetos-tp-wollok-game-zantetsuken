@@ -81,5 +81,10 @@ object derecha {
 }
 object primerPantalla {
     const property position = game.at(0,0)
-    method image() = "primerPantalla.gif"
+    method image() = "primerPantallaRedimensionado.gif"
+}
+
+object feed {
+    const property position = game.at(10, 0)
+    method image() = "fondoFeed1.jpg"
 }
