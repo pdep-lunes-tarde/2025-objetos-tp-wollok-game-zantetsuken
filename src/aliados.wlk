@@ -59,6 +59,7 @@ object soifong inherits Aliado (salud = 15, saludMaxima = 15, velocidad = 2, pos
 	override method ataqueBasico(rival){
 		self.animacionDeAtaque()
 		game.schedule(3000, {rival.daniar(letalidad)})
+		logsFeed.agregarLog("Soifong ha hecho " + letalidad + " de daño a " + rival)
 	}
 
 	override method ataqueEspecial(rival) {
@@ -70,6 +71,10 @@ object soifong inherits Aliado (salud = 15, saludMaxima = 15, velocidad = 2, pos
 		keyboard.x().onPressDo {configurador.desactivarAcciones()
 			self.ataqueEspecial(self)
 			game.schedule(7000, {turnero.pasarTurno()})
+			logsFeed.agregarLog("Soifong aumentó su letalidad en 2")
+		}
+		keyboard.c().onPressDo {
+			configurador.seleccionarRival({rival => self.ataqueBasico(rival)})
 		}
 	}
 }
