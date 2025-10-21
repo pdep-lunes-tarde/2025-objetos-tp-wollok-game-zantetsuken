@@ -69,8 +69,8 @@ class Enemigo inherits Criatura (position = game.at(7,0)){
 	override method empezarTurno() { //determina un rival de forma aleatoria, funciona correctamente
 		const objetivo = turnero.aliados().anyOne()
 		self.animacionDeAtaque()
-		game.schedule(1000, {self.ataqueBasico(objetivo)}) // era 3000ms
-		game.schedule(1000, {turnero.pasarTurno()}) // era 7000ms
+		game.schedule(3000, {self.ataqueBasico(objetivo)}) 
+		game.schedule(7000, {turnero.pasarTurno()}) 
 	}
 	method rivalporSeleccionar(accion){
 		io.removeEventHandler(["keypress", "KeyZ"])

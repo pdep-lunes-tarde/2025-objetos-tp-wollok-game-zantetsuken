@@ -25,13 +25,13 @@ object knight inherits Aliado (salud = 20, saludMaxima = 20, velocidad = 4, posi
 	
 	override method ataqueBasico(rival){
 		self.animacionDeAtaque()
-		game.schedule(1000, {rival.daniar(5)}) //era 3000ms
+		game.schedule(3000, {rival.daniar(5)}) 
 		logsFeed.agregarLog("Knight ataque basico a: " + rival)
 	}
 
 	override method ataqueEspecial(rival) {
 		self.animacionDeAtaque()
-		game.schedule(1000, {rival.matar()}) // era 3000ms
+		game.schedule(3000, {rival.matar()}) 
 		logsFeed.agregarLog("Knight ha matado a: " + rival)
 	}
 	override method empezarTurno(){
@@ -58,7 +58,7 @@ object soifong inherits Aliado (salud = 15, saludMaxima = 15, velocidad = 2, pos
 	}
 	override method ataqueBasico(rival){
 		self.animacionDeAtaque()
-		game.schedule(1000, {rival.daniar(letalidad)}) //era 3000ms
+		game.schedule(3000, {rival.daniar(letalidad)}) 
 		logsFeed.agregarLog("Soifong ha hecho " + letalidad + " de daño a " + rival)
 	}
 
@@ -70,7 +70,7 @@ object soifong inherits Aliado (salud = 15, saludMaxima = 15, velocidad = 2, pos
 		super()
 		keyboard.x().onPressDo {configurador.desactivarAcciones()
 			self.ataqueEspecial(self)
-			game.schedule(1000, {turnero.pasarTurno()}) //era 7000ms
+			game.schedule(7000, {turnero.pasarTurno()}) 
 			logsFeed.agregarLog("Soifong aumentó su letalidad en 2")
 		}
 		keyboard.c().onPressDo {
