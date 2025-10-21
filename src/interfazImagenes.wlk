@@ -81,10 +81,69 @@ object derecha {
 }
 object primerPantalla {
     const property position = game.at(0,0)
-    method image() = "primerPantallaRedimensionado.gif"
+    method image() = "pantallaDeInicio0.gif"
 }
 
 object feed {
     const property position = game.at(10, 0)
     method image() = "fondoFeed1.jpg"
+}
+
+class Log {
+    var property palabras
+    var property y
+    const property x = 12
+
+    var property position = game.at(x, y)
+
+    method text() = palabras
+
+    method activar(){
+        game.addVisual(self)
+    } 
+
+    method subirUnNivelY(){
+        y = y - 1
+    }
+
+    method subir(){
+        position = position.up(1)
+    }
+}
+object logsFeed {
+    const maxLogs = 5
+    const logsEnPantalla = []
+
+    method nuevaPosX(){
+        return logsEnPantalla.last().x()
+    }
+
+    method nuevaPosY(){
+        if(logsEnPantalla.size() == 0){
+            return 9
+        }else {return logsEnPantalla.last().y() - 1}
+    }
+
+    method subirTodos(){
+        logsEnPantalla.forEach({log => 
+        log.subir()
+        })
+    }
+
+    method mostrarLog(log){
+        log.activar()
+    }
+
+    method agregarLog(texto){
+        if(logsEnPantalla.size() == maxLogs){
+            game.removeVisual(logsEnPantalla.first()) // lo saco de pantalla
+            logsEnPantalla.removeFirst() // lo saco de la lista
+
+            self.subirTodos()
+        }
+
+        const log = new Log(palabras = texto, y = self.nuevaPosY())
+        self.mostrarLog(log)
+        logsEnPantalla.add(log)
+    }
 }

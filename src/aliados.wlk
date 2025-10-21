@@ -26,16 +26,20 @@ object knight inherits Aliado (salud = 20, saludMaxima = 20, velocidad = 4, posi
 	override method ataqueBasico(rival){
 		self.animacionDeAtaque()
 		game.schedule(3000, {rival.daniar(5)})
+		logsFeed.agregarLog("Knight ataque basico a: " + rival)
 	}
 
 	override method ataqueEspecial(rival) {
 		self.animacionDeAtaque()
 		game.schedule(3000, {rival.matar()})
+		logsFeed.agregarLog("Knight ha matado a: " + rival)
 	}
 	override method empezarTurno(){
 		super()
 		keyboard.x().onPressDo {
 			configurador.seleccionarRival({rival => self.ataqueEspecial(rival)})}
+		keyboard.c().onPressDo {
+			configurador.seleccionarRival({rival => self.ataqueBasico(rival)})}
 	}
 }
 
