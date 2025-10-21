@@ -69,8 +69,8 @@ class Enemigo inherits Criatura (position = game.at(7,0)){
 	override method empezarTurno() { //determina un rival de forma aleatoria, funciona correctamente
 		const objetivo = turnero.aliados().anyOne()
 		self.animacionDeAtaque()
-		game.schedule(3000, {self.ataqueBasico(objetivo)})
-		game.schedule(7000, {turnero.pasarTurno()})
+		game.schedule(1000, {self.ataqueBasico(objetivo)}) // era 3000ms
+		game.schedule(1000, {turnero.pasarTurno()}) // era 7000ms
 	}
 	method rivalporSeleccionar(accion){
 		io.removeEventHandler(["keypress", "KeyZ"])
@@ -89,6 +89,7 @@ object pepita inherits Enemigo(velocidad = 2, salud = 10, saludMaxima = 10, imag
 	}
     override method ataqueBasico(rival){
 		rival.daniar(2)
+		logsFeed.agregarLog("Pepita ha hecho 2 de daño a " + rival)
 	}
 	override method ataqueEspecial(rival){
 
@@ -104,10 +105,12 @@ object zombie inherits Enemigo(velocidad = 1, salud = 6, saludMaxima = 6, imagen
 	}
     override method ataqueBasico(rival){
 		rival.daniar(4)
+		logsFeed.agregarLog("Zombie ha hecho 4 de daño a " + rival)
 	}
 
 	override method curar(cantidad) {
 		self.daniar(cantidad * 2)
+		logsFeed.agregarLog("Zombie se ha curado")
 	}
 	override method ataqueEspecial(rival){
 		

@@ -102,12 +102,9 @@ class Log {
         game.addVisual(self)
     } 
 
-    method subirUnNivelY(){
-        y = y - 1
-    }
-
     method subir(){
         position = position.up(1)
+        y = y + 1
     }
 }
 object logsFeed {
@@ -136,8 +133,9 @@ object logsFeed {
 
     method agregarLog(texto){
         if(logsEnPantalla.size() == maxLogs){
-            game.removeVisual(logsEnPantalla.first()) // lo saco de pantalla
-            logsEnPantalla.removeFirst() // lo saco de la lista
+            const primerElemento = logsEnPantalla.first()
+            game.removeVisual(primerElemento) // lo saco de pantalla
+            logsEnPantalla.remove(primerElemento) // lo saco de la lista
 
             self.subirTodos()
         }
@@ -145,5 +143,9 @@ object logsFeed {
         const log = new Log(palabras = texto, y = self.nuevaPosY())
         self.mostrarLog(log)
         logsEnPantalla.add(log)
+    }
+
+    method limpiarLogs(){
+        logsEnPantalla.clear()
     }
 }

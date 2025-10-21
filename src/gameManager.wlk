@@ -90,7 +90,7 @@ object configurador{
 			atacante.empezarTurno()
 		} else if (objetivo.salud() > 0){
 			accion.apply(objetivo)
-			game.schedule(7000, {turnero.pasarTurno()})
+			game.schedule(1000, {turnero.pasarTurno()}) //era 7000ms
 		}
     }
 

@@ -61,6 +61,7 @@ object turnero {
     method combateVictorioso() {
         turnos.forEach({personaje => personaje.fullVida()})
         self.turnos().clear()
+        logsFeed.limpiarLogs()
         configurador.primerPantalla()
     }
 }
