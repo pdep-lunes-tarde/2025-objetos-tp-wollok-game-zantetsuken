@@ -3,10 +3,15 @@ import src.gameManager.*
 import personajes.*
 import aliados.*
 
+object zombieBackground{
+	const property image = "zombieFondo.png"
+	const property position = game.at(6, 5) 
+}
+
 object turnero {
     var property turnos = []
     var property turnoActual = 0
-    var property enemigos = [pepita, zombie]
+    var property enemigos = [drGero, zombie]
     var property aliados = [knight, soifong]
     const property posicionesEnemigas = [8, 10]
 
@@ -79,9 +84,10 @@ object activarAcciones {
 }
 
 object indicadorTurno {
-	method position() = game.at(7,0)
+	method position() = game.at(14,0)
 	
 	method text() = "Le toca el turno a " + turnero.personajeActivo()
+    method textColor() = "FFFFFF" 
 	method activar(){
 		game.addVisual(self)
 	}

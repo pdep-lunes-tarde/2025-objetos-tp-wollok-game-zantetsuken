@@ -81,22 +81,23 @@ object derecha {
 }
 object primerPantalla {
     const property position = game.at(0,0)
-    method image() = "pantallaDeInicio0.gif"
+    method image() = "pantallaDeInicio1.gif"
 }
 
 object feed {
-    const property position = game.at(10, 0)
+    const property position = game.at(12, 0)
     method image() = "fondoFeed1.jpg"
 }
 
 class Log {
     var property palabras
     var property y
-    const property x = 12
+    const property x = 14
 
     var property position = game.at(x, y)
 
     method text() = palabras
+    method textColor() = "FFFFFF"
 
     method activar(){
         game.addVisual(self)
@@ -148,4 +149,19 @@ object logsFeed {
     method limpiarLogs(){
         logsEnPantalla.clear()
     }
+}
+
+object soifongBackground{
+    const property image = "soifongFondo2.jpg"
+    const property position = game.at(0, 5)
+}
+
+object drGeroBackground{
+    const property image = "maestroRoshiIsla.jpg"
+    const property position = game.at(6, 0)
+}
+
+object hollowKnightBackground{
+    const property image = "knightBackground.jpg"
+    const property position = game.at(0, 0)
 }

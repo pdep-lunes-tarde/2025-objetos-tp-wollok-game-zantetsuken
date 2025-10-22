@@ -24,10 +24,11 @@ object home {
 	const property image = "fondo.jpg"
 	const property position = game.at(0, 0)
 }
+
 object configurador{
-	var property indicador = 2
+	var property indicador = 1
 	
-	method ancho() = 15
+	method ancho() = 17
 
 	method alto() = 10
 
@@ -107,16 +108,17 @@ object configurador{
 	method mostrarPersonajes(){
 		turnero.enemigos().forEach({enemigo => self.cambiarPosiciones(enemigo)})
 		self.reiniciarIndicador() //reinicia el contador para cambiar posiciones
+		turnero.turnos().forEach({personaje => game.addVisual(personaje.background())})
 		turnero.turnos().forEach({personaje => game.addVisual(personaje)})
 		turnero.turnos().forEach({personaje => game.addVisual(personaje.medidorDeSalud())})
 	}
 	method cambiarPosiciones(enemigo){
-		enemigo.position(game.at(7,indicador))
-		indicador += 3
+		enemigo.position(game.at(8,indicador))
+		indicador += 5
 	}
 
 	method reiniciarIndicador(){
-		indicador = 2
+		indicador = 1
 	}
 
 	method jugar(){

@@ -8,7 +8,8 @@ class MedidorDeVida {
 	const usuario
 	method position() = game.at(usuario.position().x(), usuario.position().y() - 1)
 
-	method text() = "" + usuario.salud() + " / " + usuario.saludMaxima()
+	method text() = "            " + usuario.salud() + " / " + usuario.saludMaxima()
+	method textColor() = "14E507"
 }
 class Criatura {
 	var property salud
@@ -59,13 +60,15 @@ class Criatura {
 	method cambiarImagenAtaque()
 	method cambiarImagenNormal()
 
+	method background()
+
 	method animacionDeAtaque(){
 		self.cambiarImagenAtaque()
 		game.schedule(2000, {self.cambiarImagenNormal()})
 	}
 	
 }
-class Enemigo inherits Criatura (position = game.at(7,0)){ 
+class Enemigo inherits Criatura (position = game.at(8,0)){ 
 	override method empezarTurno() { //determina un rival de forma aleatoria, funciona correctamente
 		const objetivo = turnero.aliados().anyOne()
 		self.animacionDeAtaque()
@@ -80,28 +83,29 @@ class Enemigo inherits Criatura (position = game.at(7,0)){
 		atacante.accion(self)
 	}
 }
-object pepita inherits Enemigo(velocidad = 2, salud = 10, saludMaxima = 10, imagen = "pepita.png") {
+object drGero inherits Enemigo(velocidad = 2, salud = 10, saludMaxima = 10, imagen = "drGero.png") {
 	override method cambiarImagenAtaque(){
-		imagen = "pepitaCanchera.png"
+		imagen = "drGeroataque.png"
 	}
 	override method cambiarImagenNormal(){
-		imagen = "pepita.png"
+		imagen = "drGero.png"
 	}
     override method ataqueBasico(rival){
 		rival.daniar(2)
-		logsFeed.agregarLog("Pepita ha hecho 2 de daño a " + rival)
+		logsFeed.agregarLog("Dr. Gero ha hecho 2 de daño a " + rival)
 	}
 	override method ataqueEspecial(rival){
 
 	}
+	override method background() = drGeroBackground
 }
 
-object zombie inherits Enemigo(velocidad = 1, salud = 6, saludMaxima = 6, imagen = "zombie.png") {
+object zombie inherits Enemigo(velocidad = 1, salud = 11, saludMaxima = 11, imagen = "zombie0.png") {
 	override method cambiarImagenAtaque(){
-		imagen = "zombieAtaque.png"
+		imagen = "zombieAtaque0.png"
 	}
 	override method cambiarImagenNormal(){
-		imagen = "zombie.png"
+		imagen = "zombie0.png"
 	}
     override method ataqueBasico(rival){
 		rival.daniar(4)
@@ -115,5 +119,6 @@ object zombie inherits Enemigo(velocidad = 1, salud = 6, saludMaxima = 6, imagen
 	override method ataqueEspecial(rival){
 		
 	}
+	override method background() = zombieBackground
 }
 

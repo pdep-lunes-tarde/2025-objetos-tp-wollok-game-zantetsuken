@@ -13,14 +13,14 @@ class Aliado inherits Criatura {
 
 }
 
-object knight inherits Aliado (salud = 20, saludMaxima = 20, velocidad = 4, position = game.at(2,2), imagen = "knight.png"){
+object knight inherits Aliado (salud = 20, saludMaxima = 20, velocidad = 4, position = game.at(2,1), imagen = "knight0.png"){
 	
 	override method image() = imagen
 	override method cambiarImagenAtaque(){
-		imagen = "knightAtaque.png"
+		imagen = "knightAtaque0.png"
 	}
 	override method cambiarImagenNormal(){
-		imagen = "knight.png"
+		imagen = "knight0.png"
 	}
 	
 	override method ataqueBasico(rival){
@@ -41,9 +41,10 @@ object knight inherits Aliado (salud = 20, saludMaxima = 20, velocidad = 4, posi
 		keyboard.c().onPressDo {
 			configurador.seleccionarRival({rival => self.ataqueBasico(rival)})}
 	}
+	override method background() = hollowKnightBackground
 }
 
-object soifong inherits Aliado (salud = 15, saludMaxima = 15, velocidad = 2, position = game.at(2,5), imagen = "soifong.png"){
+object soifong inherits Aliado (salud = 15, saludMaxima = 15, velocidad = 2, position = game.at(2,6), imagen = "soifong0.png"){
 	var letalidad = 2
 	method letalidad() = letalidad
 	method aumentarLetalidad(){
@@ -51,10 +52,10 @@ object soifong inherits Aliado (salud = 15, saludMaxima = 15, velocidad = 2, pos
 	}
 	override method image() = imagen
 	override method cambiarImagenAtaque(){
-		imagen = "soifongAtaque.png"
+		imagen = "soifongAtaque0.png"
 	}
 	override method cambiarImagenNormal(){
-		imagen = "soifong.png"
+		imagen = "soifong0.png"
 	}
 	override method ataqueBasico(rival){
 		self.animacionDeAtaque()
@@ -77,4 +78,6 @@ object soifong inherits Aliado (salud = 15, saludMaxima = 15, velocidad = 2, pos
 			configurador.seleccionarRival({rival => self.ataqueBasico(rival)})
 		}
 	}
+
+	override method background() = soifongBackground
 }
