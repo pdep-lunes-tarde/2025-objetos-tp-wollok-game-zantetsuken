@@ -86,7 +86,7 @@ object primerPantalla {
 
 object feed {
     const property position = game.at(12, 0)
-    method image() = "fondoFeed1.jpg"
+    method image() = "registroDelCombate.jpg"
 }
 
 class Log {
@@ -97,7 +97,7 @@ class Log {
     var property position = game.at(x, y)
 
     method text() = palabras
-    method textColor() = "FFFFFF"
+    method textColor() = "543A17"
 
     method activar(){
         game.addVisual(self)
@@ -118,7 +118,7 @@ object logsFeed {
 
     method nuevaPosY(){
         if(logsEnPantalla.size() == 0){
-            return 9
+            return 6
         }else {return logsEnPantalla.last().y() - 1}
     }
 
