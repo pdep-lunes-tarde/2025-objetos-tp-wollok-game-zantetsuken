@@ -165,3 +165,112 @@ object hollowKnightBackground{
     const property image = "knightBackground.jpg"
     const property position = game.at(0, 0)
 }
+
+// ===== NUEVOS OBJETOS PARA LA PANTALLA DE SELECCIÓN DE TANQUE =====
+
+object fondoSeleccionTanque {
+    const property image = "backgroundTanque2.gif" // Asegúrate de tener esta imagen en tu proyecto
+    const property position = game.at(0, 0)
+}
+
+// Opciones visuales para el Tanque. Por ahora son imágenes placeholder.
+object opcionTanque1 {
+    const property image = "janembaCarta1.png" // Reemplaza con tu imagen
+    var property position = game.at(2, 2)
+    method recibioDanio(){
+		game.removeVisual(self)
+		game.onTick(1000, "apagarAnimacion", {
+			game.addVisual(self)
+		})
+		game.schedule(500, {game.onTick(1000, "prenderAnimacion", {
+			game.removeVisual(self)
+		})})
+		game.schedule(3250, {
+			game.removeTickEvent("apagarAnimacion")
+			game.removeTickEvent("prenderAnimacion")
+			})
+	}
+}
+
+object opcionTanque2 {
+    const property image = "golemCarta1.png" // Reemplaza con tu imagen
+    var property position = game.at(7, 2)
+    method recibioDanio(){
+		game.removeVisual(self)
+		game.onTick(1000, "apagarAnimacion", {
+			game.addVisual(self)
+		})
+		game.schedule(500, {game.onTick(1000, "prenderAnimacion", {
+			game.removeVisual(self)
+		})})
+		game.schedule(3250, {
+			game.removeTickEvent("apagarAnimacion")
+			game.removeTickEvent("prenderAnimacion")
+			})
+	}
+}
+
+object opcionTanque3 {
+    const property image = "reinhardtCarta1.png" // Reemplaza con tu imagen
+    var property position = game.at(12, 2)
+}
+
+// ===== NUEVOS OBJETOS PARA LA PANTALLA DE SELECCIÓN DE HECHICERO =====
+
+object fondoSeleccionHechicero {
+    const property image = "backgroundHechicero.gif" // Puedes usar el mismo fondo romano o uno nuevo
+    const property position = game.at(0, 0)
+}
+
+object opcionHechicero1 {
+    const property image = "janembaCarta1.png" // Reemplaza con tu imagen
+    var property position = game.at(2, 2)
+}
+
+object opcionHechicero2 {
+    const property image = "janembaCarta1.png" // Reemplaza con tu imagen
+    var property position = game.at(7, 2)
+}
+
+object opcionHechicero3 {
+    const property image = "janembaCarta1.png" // Reemplaza con tu imagen
+    var property position = game.at(12, 2)
+}
+
+
+// ===== NUEVOS OBJETOS PARA LA PANTALLA DE SELECCIÓN DE GUERRERO =====
+
+object fondoSeleccionGuerrero {
+    const property image = "backgroundGuerrero.gif" // Puedes usar el mismo fondo romano o uno nuevo
+    const property position = game.at(0, 0)
+}
+
+object opcionGuerrero1 {
+    const property image = "janembaCarta1.png" // Reemplaza con tu imagen
+    var property position = game.at(2, 2)
+}
+
+object opcionGuerrero2 {
+    const property image = "janembaCarta1.png" // Reemplaza con tu imagen
+    var property position = game.at(7, 2)
+}
+
+object opcionGuerrero3 {
+    const property image = "janembaCarta1.png" // Reemplaza con tu imagen
+    var property position = game.at(12, 2)
+}
+
+// ===== NUEVO OBJETO PARA LA PANTALLA DE RESUMEN DE SELECCIÓN =====
+object fondoResumen {
+    // Reemplaza "fondoResumen.gif" con el nombre de tu archivo de imagen cuando lo tengas
+    const property image = "fondoSeleccionGuerrero.gif" // Placeholder
+    const property position = game.at(0, 0)
+}
+
+// ===== NUEVO OBJETO PARA LA PANTALLA DE SELECCIÓN DE RIVAL =====
+object fondoSeleccionRival {
+    // Reemplaza "fondoRival.gif" con tu imagen cuando la tengas
+    const property image = "fondoSeleccionGuerrero.gif" // Placeholder
+    const property position = game.at(0, 0)
+}
+
