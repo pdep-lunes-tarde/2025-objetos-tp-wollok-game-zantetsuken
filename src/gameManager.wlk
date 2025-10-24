@@ -145,13 +145,13 @@ object configurador {
         io.clear()
         game.addVisual(fondoSeleccionRival)
 
-        hechiceroRival.position(game.at(3, 2))
+        hechiceroRival.position(game.at(3, 3))
         game.addVisual(hechiceroRival)
-        guerreroRival.position(game.at(10, 2))
+        guerreroRival.position(game.at(10, 3))
         game.addVisual(guerreroRival)
 
         // Preparamos el listener para comenzar el juego
-        keyboard.z().onPressDo { self.activarCombate() }
+        keyboard.enter().onPressDo { self.activarCombate() }
     }
 
     method inicializarJuego() {
@@ -175,7 +175,7 @@ object configurador {
         game.clear()
         game.ground(mapaElegido) 
         //game.addVisual(feed)
-        turnero.empezarCombate()
+        turnero.empezarCombate([guerreroElegido, hechiceroElegido], [hechiceroRival, guerreroRival])
     }
     method seleccionarRival(accion) {
         self.desactivarAcciones()
@@ -208,7 +208,6 @@ object configurador {
     method mostrarPersonajes() {
         turnero.enemigos().forEach({ enemigo => self.cambiarPosiciones(enemigo) })
         self.reiniciarIndicador()
-        turnero.turnos().forEach({ personaje => game.addVisual(personaje.background()) })
         turnero.turnos().forEach({ personaje => game.addVisual(personaje) })
         turnero.turnos().forEach({ personaje => game.addVisual(personaje.medidorDeSalud()) })
     }

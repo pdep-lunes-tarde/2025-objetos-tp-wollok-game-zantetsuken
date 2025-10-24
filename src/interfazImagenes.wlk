@@ -170,14 +170,14 @@ object hollowKnightBackground{
 // ===== NUEVOS OBJETOS PARA LA PANTALLA DE SELECCIÓN DE HECHICERO =====
 
 object fondoSeleccionHechicero {
-    const property image = "backgroundHechicero.gif" // Puedes usar el mismo fondo romano o uno nuevo
+    const property image = "primerPantallaSeleccion.gif" // Puedes usar el mismo fondo romano o uno nuevo
     const property position = game.at(0, 0)
 }
 
 // ===== NUEVOS OBJETOS PARA LA PANTALLA DE SELECCIÓN DE GUERRERO =====
 
 object fondoSeleccionGuerrero {
-    const property image = "segundaPantallaSeleccion.gif" // Puedes usar el mismo fondo romano o uno nuevo
+    const property image = "segundaPantallaSeleccion2.gif" // Puedes usar el mismo fondo romano o uno nuevo
     const property position = game.at(0, 0)
 }
 
@@ -193,7 +193,7 @@ object fondoResumen {
 // ===== NUEVO OBJETO PARA LA PANTALLA DE SELECCIÓN DE RIVAL =====
 object fondoSeleccionRival {
     // Reemplaza "fondoRival.gif" con tu imagen cuando la tengas
-    const property image = "fondoSeleccionGuerrero.gif" // Placeholder
+    const property image = "pantallaCartasDelRival.gif" // Placeholder
     const property position = game.at(0, 0)
 }
 

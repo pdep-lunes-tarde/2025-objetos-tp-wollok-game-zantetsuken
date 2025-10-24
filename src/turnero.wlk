@@ -10,11 +10,13 @@ object zombieBackground{
 object turnero {
     var property turnos = []
     var property turnoActual = 0
-    var property enemigos = [magoOscuro, halfdan]
-    var property aliados = [santhurius, nemegis]
+    var property enemigos = []
+    var property aliados = []
     const property posicionesEnemigas = [8, 10]
 
-    method empezarCombate(){
+    method empezarCombate(cartasElegidas, cartasDelRival){
+        aliados = cartasElegidas
+        enemigos = cartasDelRival
         turnoActual = 0
         aliados.forEach {aliado => self.agregarPersonaje(aliado)}
         enemigos.forEach {enemigo => self.agregarPersonaje(enemigo)}

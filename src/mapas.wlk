@@ -24,6 +24,6 @@ const mapaGalaxy = new TarjetaMapa(imagen = "galaxia.jpg")
 const mapaInfierno= new TarjetaMapa(imagen = "inferno.jpg")
 
 object fondoSeleccionMapa {
-    const property image = "fondoBack.jpg"
+    const property image = "pantallaSeleccionDeCartas2.gif"
     const property position = game.at(0, 0) 
 }
