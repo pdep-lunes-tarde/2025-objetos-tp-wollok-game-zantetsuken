@@ -4,6 +4,7 @@ import aliados.*
 import interfazImagenes.*
 import wollok.game.*
 import turnero.*
+import mapas.*
 
 object gameManager {
     method mostrarMenu() {
@@ -35,17 +36,50 @@ object configurador {
     const property opcionesDeTanque = [opcionTanque1, opcionTanque2, opcionTanque3]
     const property opcionesDeHechicero = [opcionHechicero1, opcionHechicero2, opcionHechicero3]
     const property opcionesDeGuerrero = [opcionGuerrero1, opcionGuerrero2, opcionGuerrero3]
-    
+
+    // <<<--- NUEVAS VARIABLES PARA EL MAPA ---<<<
+    var property mapaElegido = null 
+    const property opcionesDeMapa = [mapaCastillo, mapaGalaxy, mapaInfierno, mapaPuente]
+
+
     var property tanqueRival = null
     var property hechiceroRival = null
     var property guerreroRival = null
 
-    method ancho() = 18
+    method ancho() = 16
     method alto() = 10
+
+
     method primerPantalla() {
         game.clear()
         game.addVisual(primerPantalla)
-        keyboard.enter().onPressDo { self.mostrarSeleccionDeTanque() }
+        keyboard.enter().onPressDo { self.mostrarSeleccionDeMapa() }
+    }
+    method mostrarSeleccionDeMapa() {
+        game.clear()
+        io.clear()
+        game.addVisual(fondoSeleccionMapa)
+        mapaPuente.position(game.at(0.1, 3))   
+        mapaCastillo.position(game.at(3.5, 3))  
+        mapaGalaxy.position(game.at(6.5, 3))   
+        mapaInfierno.position(game.at(10.5, 3))
+        
+        // Muestra las 4 imágenes de mapa
+        opcionesDeMapa.forEach({ mapita => game.addVisual(mapita) })
+
+        
+
+        // seleccion ed mapas
+        keyboard.num1().onPressDo { self.seleccionarMapa(opcionesDeMapa.get(0)) }
+        keyboard.num2().onPressDo { self.seleccionarMapa(opcionesDeMapa.get(1)) }
+        keyboard.num3().onPressDo { self.seleccionarMapa(opcionesDeMapa.get(2)) }
+        keyboard.num4().onPressDo { self.seleccionarMapa(opcionesDeMapa.get(3)) }
+    }
+    
+    method seleccionarMapa(mapa) {
+        mapaElegido = mapa.image() // Guardamos el mapa elegido
+        // Luego de elegir el mapa, pasamos a la selección de tanque
+        self.mostrarSeleccionDeTanque()
     }
 
 
@@ -164,6 +198,9 @@ object configurador {
     }
     method activarCombate() {
         game.clear()
+
+        game.ground(mapaElegido) // Establece el mapa elegido como fondo de combate
+
         game.addVisual(feed)
         turnero.empezarCombate()
     }
