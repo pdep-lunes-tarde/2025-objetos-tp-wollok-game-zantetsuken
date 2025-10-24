@@ -1,7 +1,6 @@
 import interfazImagenes.*
 import wollok.game.*
 import turnero.*
-import gameManager.*
 
 class MedidorDeVida {
 	const usuario

@@ -4,7 +4,6 @@ import interfazImagenes.*
 import wollok.game.*
 import turnero.*
 import mapas.*
-import mapas.*
 
 object gameManager {
     method mostrarMenu() {
@@ -49,22 +48,20 @@ object configurador {
     method primerPantalla() {
         game.clear()
         game.addVisual(primerPantalla)
-        keyboard.enter().onPressDo { self.mostrarSeleccionDeHechicero() }
+        keyboard.enter().onPressDo { self.mostrarSeleccionDeMapa() }
     }
 
     method mostrarSeleccionDeMapa() {
         game.clear()
         io.clear()
         game.addVisual(fondoSeleccionMapa)
-        mapaPuente.position(game.at(0.1, 3))   
-        mapaCastillo.position(game.at(3.5, 3))  
-        mapaGalaxy.position(game.at(6.5, 3))   
-        mapaInfierno.position(game.at(10.5, 3))
+        mapaPuente.position(game.at(2, 1))   
+        mapaCastillo.position(game.at(10, 1))  
+        mapaGalaxy.position(game.at(2, 6))   
+        mapaInfierno.position(game.at(10, 6))
         
         // Muestra las 4 imágenes de mapa
         opcionesDeMapa.forEach({ mapita => game.addVisual(mapita) })
-
-        
 
         // seleccion ed mapas
         keyboard.num1().onPressDo { self.seleccionarMapa(opcionesDeMapa.get(0)) }
@@ -161,7 +158,7 @@ object configurador {
         game.title("PrimerPantalla")
         game.height(self.alto())
         game.width(self.ancho())
-        game.ground("suelo.png")
+        //game.ground("suelo.png")
     }
 
     method inicializarSeleccionador() {
@@ -177,7 +174,7 @@ object configurador {
     method activarCombate() {
         game.clear()
         game.ground(mapaElegido) 
-        game.addVisual(feed)
+        //game.addVisual(feed)
         turnero.empezarCombate()
     }
     method seleccionarRival(accion) {
