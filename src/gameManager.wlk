@@ -1,9 +1,9 @@
 import personajes.*
 import otroEvento.*
-import aliados.*
 import interfazImagenes.*
 import wollok.game.*
 import turnero.*
+import mapas.*
 
 object gameManager {
     method mostrarMenu() {
@@ -27,105 +27,116 @@ object home {
 object configurador {
     var property indicador = 1
     // ===== VARIABLES PARA GUARDAR LAS ELECCIONES DEL JUGADOR =====
-    var tanqueElegido = null
     var hechiceroElegido = null
     var guerreroElegido = null
 
     // <<<--- NUEVAS VARIABLES PARA LOS ENEMIGOS (POR CATEGORÍA) ---<<<
-    const property opcionesDeTanque = [opcionTanque1, opcionTanque2, opcionTanque3]
-    const property opcionesDeHechicero = [opcionHechicero1, opcionHechicero2, opcionHechicero3]
-    const property opcionesDeGuerrero = [opcionGuerrero1, opcionGuerrero2, opcionGuerrero3]
+    const property opcionesDeHechicero = [magoOscuro, nemegis, nikxomus, thiagurius]
+    const property opcionesDeGuerrero = [halfdan, santhurius, soldadoBrilloNegro, malaika]
+
+    // <<<--- NUEVAS VARIABLES PARA EL MAPA ---<<<
+    var property mapaElegido = null 
+    const property opcionesDeMapa = [mapaCastillo, mapaGalaxy, mapaInfierno, mapaPuente]
     
-    var property tanqueRival = null
     var property hechiceroRival = null
     var property guerreroRival = null
 
-    method ancho() = 18
+    method ancho() = 16
     method alto() = 10
     method primerPantalla() {
         game.clear()
         game.addVisual(primerPantalla)
-        keyboard.enter().onPressDo { self.mostrarSeleccionDeTanque() }
+        keyboard.enter().onPressDo { self.mostrarSeleccionDeHechicero() }
     }
 
-
-    // ===== MÉTODOS DE SELECCIÓN (ACTUALIZADOS Y NUEVOS) =====
-    method mostrarSeleccionDeTanque() {
+    method mostrarSeleccionDeMapa() {
         game.clear()
         io.clear()
-        game.addVisual(fondoSeleccionTanque)
-        game.addVisual(opcionTanque1)
-        game.addVisual(opcionTanque2)
-        game.addVisual(opcionTanque3)
-        keyboard.num1().onPressDo { self.seleccionarTanque(1) }
-        keyboard.num2().onPressDo { self.seleccionarTanque(2) }
-        keyboard.num3().onPressDo { self.seleccionarTanque(3) }
+        game.addVisual(fondoSeleccionMapa)
+        mapaPuente.position(game.at(0.1, 3))   
+        mapaCastillo.position(game.at(3.5, 3))  
+        mapaGalaxy.position(game.at(6.5, 3))   
+        mapaInfierno.position(game.at(10.5, 3))
+        
+        // Muestra las 4 imágenes de mapa
+        opcionesDeMapa.forEach({ mapita => game.addVisual(mapita) })
+
+        
+
+        // seleccion ed mapas
+        keyboard.num1().onPressDo { self.seleccionarMapa(opcionesDeMapa.get(0)) }
+        keyboard.num2().onPressDo { self.seleccionarMapa(opcionesDeMapa.get(1)) }
+        keyboard.num3().onPressDo { self.seleccionarMapa(opcionesDeMapa.get(2)) }
+        keyboard.num4().onPressDo { self.seleccionarMapa(opcionesDeMapa.get(3)) }
     }
-    method seleccionarTanque(numero) {
-        tanqueElegido = numero
+    
+    method seleccionarMapa(mapa) {
+        mapaElegido = mapa.image() // Guardamos el mapa elegido
         self.mostrarSeleccionDeHechicero()
     }
+
     method mostrarSeleccionDeHechicero() {
         game.clear()
         io.clear()
         game.addVisual(fondoSeleccionHechicero)
-        game.addVisual(opcionHechicero1)
-        game.addVisual(opcionHechicero2)
-        game.addVisual(opcionHechicero3)
+        game.addVisual(magoOscuro)
+        game.addVisual(nemegis)
+        game.addVisual(nikxomus)
+        game.addVisual(thiagurius)
         keyboard.num1().onPressDo { self.seleccionarHechicero(1) }
         keyboard.num2().onPressDo { self.seleccionarHechicero(2) }
         keyboard.num3().onPressDo { self.seleccionarHechicero(3) }
+        keyboard.num4().onPressDo { self.seleccionarHechicero(4) }
     }
+
     method seleccionarHechicero(numero) {
-        hechiceroElegido = numero
+        if(numero==1){
+            hechiceroElegido = magoOscuro
+        }else if(numero==2){
+            hechiceroElegido = nemegis         
+        }else if(numero==3){
+            hechiceroElegido = nikxomus
+        }else if(numero==4){
+            hechiceroElegido = thiagurius
+        }
         self.mostrarSeleccionDeGuerrero()
     }
+
     method mostrarSeleccionDeGuerrero() {
         game.clear()
         io.clear()
         game.addVisual(fondoSeleccionGuerrero)
-        game.addVisual(opcionGuerrero1)
-        game.addVisual(opcionGuerrero2)
-        game.addVisual(opcionGuerrero3)
+        game.addVisual(halfdan)
+        game.addVisual(santhurius)
+        game.addVisual(soldadoBrilloNegro)
+        game.addVisual(malaika)
         keyboard.num1().onPressDo { self.seleccionarGuerrero(1) }
         keyboard.num2().onPressDo { self.seleccionarGuerrero(2) }
         keyboard.num3().onPressDo { self.seleccionarGuerrero(3) }
+        keyboard.num4().onPressDo { self.seleccionarGuerrero(4) }
     }
     
     method seleccionarGuerrero(numero) {
-        guerreroElegido = numero
-        self.mostrarResumenDeSeleccion()
-    }
-
-    method mostrarResumenDeSeleccion() {
-        game.clear()
-        io.clear()
-        game.addVisual(fondoResumen)
-
-        const cartaTanque = if (tanqueElegido == 1) opcionTanque1 else if (tanqueElegido == 2) opcionTanque2 else opcionTanque3
-        const cartaHechicero = if (hechiceroElegido == 1) opcionHechicero1 else if (hechiceroElegido == 2) opcionHechicero2 else opcionHechicero3
-        const cartaGuerrero = if (guerreroElegido == 1) opcionGuerrero1 else if (guerreroElegido == 2) opcionGuerrero2 else opcionGuerrero3
-
-        cartaTanque.position(game.at(2, 2))
-        game.addVisual(cartaTanque)
-        cartaHechicero.position(game.at(7, 2))
-        game.addVisual(cartaHechicero)
-        cartaGuerrero.position(game.at(12, 2))
-        game.addVisual(cartaGuerrero)
-
-        // Al presionar Z, ahora selecciona y muestra a los rivales
-        keyboard.z().onPressDo { 
-            self.seleccionarEnemigosAleatorios()
-            self.mostrarSeleccionDeRival()
+        if(numero==1){
+            guerreroElegido = halfdan
+        }else if(numero==2){
+            guerreroElegido = santhurius       
+        }else if(numero==3){
+            guerreroElegido = soldadoBrilloNegro
+        }else if(numero==4){
+            guerreroElegido = malaika
         }
+        self.seleccionarEnemigosAleatorios()       
     }
 
     // <<<--- MÉTODO MODIFICADO ---<<<
     method seleccionarEnemigosAleatorios() {
         // Selecciona 1 enemigo aleatorio de cada categoría
-        tanqueRival = opcionesDeTanque.anyOne()
+        opcionesDeHechicero.remove(hechiceroElegido)
         hechiceroRival = opcionesDeHechicero.anyOne()
+        opcionesDeGuerrero.remove(guerreroElegido)
         guerreroRival = opcionesDeGuerrero.anyOne()
+        self.mostrarSeleccionDeRival()
     }
 
     // <<<--- MÉTODO MODIFICADO ---<<<
@@ -134,11 +145,9 @@ object configurador {
         io.clear()
         game.addVisual(fondoSeleccionRival)
 
-        tanqueRival.position(game.at(2, 2))
-        game.addVisual(tanqueRival)
-        hechiceroRival.position(game.at(7, 2))
+        hechiceroRival.position(game.at(3, 2))
         game.addVisual(hechiceroRival)
-        guerreroRival.position(game.at(12, 2))
+        guerreroRival.position(game.at(10, 2))
         game.addVisual(guerreroRival)
 
         // Preparamos el listener para comenzar el juego
@@ -164,6 +173,7 @@ object configurador {
     }
     method activarCombate() {
         game.clear()
+        game.ground(mapaElegido) 
         game.addVisual(feed)
         turnero.empezarCombate()
     }

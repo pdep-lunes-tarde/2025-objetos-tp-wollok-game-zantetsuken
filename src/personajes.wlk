@@ -1,6 +1,5 @@
 import interfazImagenes.*
 import wollok.game.*
-import aliados.*
 import turnero.*
 import gameManager.*
 
@@ -11,114 +10,153 @@ class MedidorDeVida {
 	method text() = "            " + usuario.salud() + " / " + usuario.saludMaxima()
 	method textColor() = "14E507"
 }
-class Criatura {
-	var property salud
-	const property saludMaxima
-    const property velocidad 
-	var property position
-	const property medidorDeSalud = new MedidorDeVida(usuario = self)
-	var property imagen
-	
-	method ataqueBasico(rival)
+class Carta {
+    const property nombre
+    const property tipo               // "guerrero", "tanque", "hechicero"
+    const property ataque             // valor de ataque (también usado como referencia)
+    const property defensa            // valor de defensa
+    var property energia              // energiaDeAtaque que se va consumiendo
+    var property salud
+    const property saludMaxima
+    const property costoBasico = 100
+    const property costoEspecial = 300
+    const property medidorDeSalud = new MedidorDeVida(usuario = self)
 
-	method ataqueEspecial(rival)
+    method init(){
+        // asegurar valores iniciales
+        if (self.salud() == null) self.salud(self.saludMaxima())
+        if (self.energia() == null) self.energia(self.ataque())
+    }
 
-	method fullVida(){
-		salud = self.saludMaxima()
-	}
+    // Ataque básico: consume energía y causa daño igual a ataque
+    method ataqueBasico(rival) {
+        if (!self.puedeAtacarBasico()) {
+            logsFeed.agregarLog(self.nombre() + " no tiene energía para un ataque básico.")
+        }
+        self.energia(self.energia() - self.costoBasico())
+        self.animacionDeAtaque()
+        game.schedule(500, { rival.recibirAtaque(self.ataque()) })
+        logsFeed.agregarLog(self.nombre() + " realiza ataque básico causando " + self.ataque() + " a " + rival)
+    }
 
-	method daniar(danio) {
-		self.recibioDanio()
-		salud = (self.salud()-danio).max(0)
-	}
-	method curar(cantidad){
-		const vidaPotencial = self.salud() + cantidad
-		if (vidaPotencial >= self.saludMaxima()){
-			self.fullVida()
-		} else {
-			self.salud(vidaPotencial)
-		}
-	}
-	method matar(){
-		salud = 0
-	}
-	method empezarTurno()
-	method recibioDanio(){
-		game.removeVisual(self)
-		game.onTick(1000, "apagarAnimacion", {
-			game.addVisual(self)
-		})
-		game.schedule(500, {game.onTick(1000, "prenderAnimacion", {
-			game.removeVisual(self)
-		})})
-		game.schedule(3250, {
-			game.removeTickEvent("apagarAnimacion")
-			game.removeTickEvent("prenderAnimacion")
-			})
-	}
-	method image() = imagen
-	method cambiarImagenAtaque()
-	method cambiarImagenNormal()
+    // Ataque especial: por defecto más costoso y más daño (puede override)
+    method ataqueEspecial(rival) {
+        if (!self.puedeAtacarEspecial()) {
+            logsFeed.agregarLog(self.nombre() + " no tiene energía para un ataque especial.")
+        }
+        self.energia(self.energia() - self.costoEspecial())
+        const dano = (self.ataque() * 1.8).toInt()
+        self.animacionDeAtaque()
+        game.schedule(500, { rival.recibirAtaque(dano) })
+        logsFeed.agregarLog(self.nombre() + " realiza ataque especial causando " + dano + " a " + rival)
+    }
 
-	method background()
+    method puedeAtacarBasico() = self.energia() >= self.costoBasico()
+    method puedeAtacarEspecial() = self.energia() >= self.costoEspecial()
 
-	method animacionDeAtaque(){
-		self.cambiarImagenAtaque()
-		game.schedule(2000, {self.cambiarImagenNormal()})
-	}
-	
+    // recibe ataque: aplica defensa y reduce salud
+    method recibirAtaque(danio) {
+        // Fórmula de mitigación: daño * 100 / (100 + defensa)
+        const danoReal = ((danio * 100) / (100 + self.defensa())).toInt().max(0)
+        self.daniar(danoReal)
+        logsFeed.agregarLog(self.nombre() + " recibe " + danoReal + " de daño real (entrada: " + danio + ").")
+    }
+
+    method daniar(danio) {
+        self.recibioDanio()
+        salud = (self.salud()-danio).max(0)
+        if (self.salud() == 0) {
+            self.matar()
+            logsFeed.agregarLog(self.nombre() + " ha sido derrotado.")
+        }
+    }
+
+    method curar(cantidad){
+        const vidaPotencial = self.salud() + cantidad
+        if (vidaPotencial >= self.saludMaxima()){
+            self.fullVida()
+        } else {
+            self.salud(vidaPotencial)
+        }
+    }
+
+    method fullVida(){
+        salud = self.saludMaxima()
+    }
+
+    method matar(){
+        salud = 0
+        game.removeVisual(self)
+    }
+
+    method empezarTurno() {
+        // comportamiento por defecto: si es enemigo ataca a un aliado al azar
+        if (turnero.aliados().size() > 0) {
+            const objetivo = turnero.aliados().anyOne()
+            self.animacionDeAtaque()
+            game.schedule(3000, { self.ataqueBasico(objetivo) })
+            game.schedule(7000, { turnero.pasarTurno() })
+        } else {
+            turnero.pasarTurno()
+        }
+    }
+
+    method recibioDanio(){
+        game.removeVisual(self)
+        game.onTick(1000, "apagarAnimacion", {
+            game.addVisual(self)
+        })
+        game.schedule(500, {game.onTick(1000, "prenderAnimacion", {
+            game.removeVisual(self)
+        })})
+        game.schedule(3250, {
+            game.removeTickEvent("apagarAnimacion")
+            game.removeTickEvent("prenderAnimacion")
+            })
+    }
+
+    method animacionDeAtaque(){
+        
+    }
 }
-class Enemigo inherits Criatura (position = game.at(8,0)){ 
-	override method empezarTurno() { //determina un rival de forma aleatoria, funciona correctamente
-		const objetivo = turnero.aliados().anyOne()
-		self.animacionDeAtaque()
-		game.schedule(3000, {self.ataqueBasico(objetivo)}) 
-		game.schedule(7000, {turnero.pasarTurno()}) 
-	}
-	method rivalporSeleccionar(accion){
-		io.removeEventHandler(["keypress", "KeyZ"])
-        keyboard.z().onPressDo{configurador.corroborarAtaque(self, accion)}
-	}
-	method serSeleccionado(atacante, accion){
-		atacante.accion(self)
-	}
-}
-object drGero inherits Enemigo(velocidad = 2, salud = 10, saludMaxima = 10, imagen = "drGero.png") {
-	override method cambiarImagenAtaque(){
-		imagen = "drGeroataque.png"
-	}
-	override method cambiarImagenNormal(){
-		imagen = "drGero.png"
-	}
-    override method ataqueBasico(rival){
-		rival.daniar(2)
-		logsFeed.agregarLog("Dr. Gero ha hecho 2 de daño a " + rival)
-	}
-	override method ataqueEspecial(rival){
 
-	}
-	override method background() = drGeroBackground
+// Definición de cartas como constantes compactas
+object magoOscuro inherits Carta(nombre = "Mago Oscuro", tipo = "hechicero", ataque = 2500, defensa = 2100, energia = 2500, salud = 2500, saludMaxima = 2500){
+	const property image = "MagoOscuroSeleccion.jpg" // Reemplaza con tu imagen
+    var property position = game.at(3, 6)
 }
 
-object zombie inherits Enemigo(velocidad = 1, salud = 11, saludMaxima = 11, imagen = "zombie0.png") {
-	override method cambiarImagenAtaque(){
-		imagen = "zombieAtaque0.png"
-	}
-	override method cambiarImagenNormal(){
-		imagen = "zombie0.png"
-	}
-    override method ataqueBasico(rival){
-		rival.daniar(4)
-		logsFeed.agregarLog("Zombie ha hecho 4 de daño a " + rival)
-	}
-
-	override method curar(cantidad) {
-		self.daniar(cantidad * 2)
-		logsFeed.agregarLog("Zombie se ha curado")
-	}
-	override method ataqueEspecial(rival){
-		
-	}
-	override method background() = zombieBackground
+object thiagurius inherits Carta(nombre = "Thiagurius", tipo = "hechicero", ataque = 5000, defensa = 4000, energia = 5000, salud = 5000, saludMaxima = 5000){
+	const property image = "ThiaguriusSeleccion.jpeg"
+    var property position = game.at(10, 1)
 }
+
+object nemegis inherits Carta(nombre = "Nemegis", tipo = "hechicero", ataque = 3500, defensa = 4000, energia = 3500, salud = 3500, saludMaxima = 3500){
+	const property image = "nemegisSeleccion.jpeg" // Reemplaza con tu imagen
+    var property position = game.at(10, 6)
+}
+object nikxomus inherits Carta(nombre = "Nikxomus", tipo = "hechicero", ataque = 7000, defensa = 2100, energia = 7000, salud = 7000, saludMaxima = 7000){
+	const property image = "NikxomusSeleccion.jpeg" // Reemplaza con tu imagen
+    var property position = game.at(3, 1)
+}
+object santhurius inherits Carta(nombre = "Santhurius", tipo = "guerrero", ataque = 9999, defensa = 4000, energia = 9999, salud = 9999, saludMaxima = 9999){
+	const property image = "SanthuriusSeleccion.jpeg" // Reemplaza con tu imagen
+    var property position = game.at(10, 6)
+}
+
+object soldadoBrilloNegro inherits Carta(nombre = "Soldado Brillo Negro", tipo = "guerrero", ataque = 3000, defensa = 2500, energia = 3000, salud = 3000, saludMaxima = 3000){
+	const property image = "soldadoBrilloNegroSeleccion.jpg" // Reemplaza con tu imagen
+    var property position = game.at(3, 1)
+}
+
+object malaika inherits Carta(nombre = "Malaika", tipo = "guerrero", ataque = 3700, defensa = 1400, energia = 3700, salud = 3700, saludMaxima = 3700){
+    const property image = "MalaikaSeleccion.jpeg"
+    var property position = game.at(10, 1)
+}
+
+object halfdan inherits Carta(nombre = "Halfdan", tipo = "guerrero", ataque = 1300, defensa = 200, energia = 1300, salud = 1300, saludMaxima = 1300){
+	const property image = "halfdanSeleccion.jpeg" // Reemplaza con tu imagen
+    var property position = game.at(3, 6)
+}
+
 

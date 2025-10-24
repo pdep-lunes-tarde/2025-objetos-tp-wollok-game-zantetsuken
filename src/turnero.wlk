@@ -1,7 +1,6 @@
 import src.interfazImagenes.*
 import src.gameManager.*
 import personajes.*
-import aliados.*
 
 object zombieBackground{
 	const property image = "zombieFondo.png"
@@ -11,8 +10,8 @@ object zombieBackground{
 object turnero {
     var property turnos = []
     var property turnoActual = 0
-    var property enemigos = [drGero, zombie]
-    var property aliados = [knight, soifong]
+    var property enemigos = [magoOscuro, halfdan]
+    var property aliados = [santhurius, nemegis]
     const property posicionesEnemigas = [8, 10]
 
     method empezarCombate(){

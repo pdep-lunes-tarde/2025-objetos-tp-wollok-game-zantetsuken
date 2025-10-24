@@ -1,6 +1,7 @@
 import src.gameManager.*
 import wollok.game.*
 import turnero.*
+
 object seleccionador {
 	var posicion = new Position(x=2, y=2)
 	method image() = "seleccionadorCuadradoA.png"
@@ -166,55 +167,6 @@ object hollowKnightBackground{
     const property position = game.at(0, 0)
 }
 
-// ===== NUEVOS OBJETOS PARA LA PANTALLA DE SELECCIÓN DE TANQUE =====
-
-object fondoSeleccionTanque {
-    const property image = "backgroundTanque2.gif" // Asegúrate de tener esta imagen en tu proyecto
-    const property position = game.at(0, 0)
-}
-
-// Opciones visuales para el Tanque. Por ahora son imágenes placeholder.
-object opcionTanque1 {
-    const property image = "janembaCarta1.png" // Reemplaza con tu imagen
-    var property position = game.at(2, 2)
-    method recibioDanio(){
-		game.removeVisual(self)
-		game.onTick(1000, "apagarAnimacion", {
-			game.addVisual(self)
-		})
-		game.schedule(500, {game.onTick(1000, "prenderAnimacion", {
-			game.removeVisual(self)
-		})})
-		game.schedule(3250, {
-			game.removeTickEvent("apagarAnimacion")
-			game.removeTickEvent("prenderAnimacion")
-			})
-	}
-}
-
-object opcionTanque2 {
-    const property image = "golemCarta1.png" // Reemplaza con tu imagen
-    var property position = game.at(7, 2)
-    method recibioDanio(){
-		game.removeVisual(self)
-		game.onTick(1000, "apagarAnimacion", {
-			game.addVisual(self)
-		})
-		game.schedule(500, {game.onTick(1000, "prenderAnimacion", {
-			game.removeVisual(self)
-		})})
-		game.schedule(3250, {
-			game.removeTickEvent("apagarAnimacion")
-			game.removeTickEvent("prenderAnimacion")
-			})
-	}
-}
-
-object opcionTanque3 {
-    const property image = "reinhardtCarta1.png" // Reemplaza con tu imagen
-    var property position = game.at(12, 2)
-}
-
 // ===== NUEVOS OBJETOS PARA LA PANTALLA DE SELECCIÓN DE HECHICERO =====
 
 object fondoSeleccionHechicero {
@@ -222,43 +174,14 @@ object fondoSeleccionHechicero {
     const property position = game.at(0, 0)
 }
 
-object opcionHechicero1 {
-    const property image = "janembaCarta1.png" // Reemplaza con tu imagen
-    var property position = game.at(2, 2)
-}
-
-object opcionHechicero2 {
-    const property image = "janembaCarta1.png" // Reemplaza con tu imagen
-    var property position = game.at(7, 2)
-}
-
-object opcionHechicero3 {
-    const property image = "janembaCarta1.png" // Reemplaza con tu imagen
-    var property position = game.at(12, 2)
-}
-
-
 // ===== NUEVOS OBJETOS PARA LA PANTALLA DE SELECCIÓN DE GUERRERO =====
 
 object fondoSeleccionGuerrero {
-    const property image = "backgroundGuerrero.gif" // Puedes usar el mismo fondo romano o uno nuevo
+    const property image = "segundaPantallaSeleccion.gif" // Puedes usar el mismo fondo romano o uno nuevo
     const property position = game.at(0, 0)
 }
 
-object opcionGuerrero1 {
-    const property image = "janembaCarta1.png" // Reemplaza con tu imagen
-    var property position = game.at(2, 2)
-}
 
-object opcionGuerrero2 {
-    const property image = "janembaCarta1.png" // Reemplaza con tu imagen
-    var property position = game.at(7, 2)
-}
-
-object opcionGuerrero3 {
-    const property image = "janembaCarta1.png" // Reemplaza con tu imagen
-    var property position = game.at(12, 2)
-}
 
 // ===== NUEVO OBJETO PARA LA PANTALLA DE RESUMEN DE SELECCIÓN =====
 object fondoResumen {
