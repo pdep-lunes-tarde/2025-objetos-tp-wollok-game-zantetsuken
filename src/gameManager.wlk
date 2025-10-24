@@ -4,6 +4,7 @@ import interfazImagenes.*
 import wollok.game.*
 import turnero.*
 import mapas.*
+import mapas.*
 
 object gameManager {
     method mostrarMenu() {
@@ -43,6 +44,8 @@ object configurador {
 
     method ancho() = 16
     method alto() = 10
+
+
     method primerPantalla() {
         game.clear()
         game.addVisual(primerPantalla)
