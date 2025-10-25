@@ -1,23 +1,9 @@
 import personajes.*
-import otroEvento.*
+import sistemaSeleccionador.*
 import interfazImagenes.*
 import wollok.game.*
 import turnero.*
 import mapas.*
-
-object gameManager {
-    method mostrarMenu() {
-        game.clear()
-        game.addVisual(home)
-
-        keyboard.t().onPressDo {
-            manager.iniciarJuego()
-        }
-        keyboard.z().onPressDo {
-            configurador.inicializarJuego()
-        }
-    }
-}
 
 object home {
     const property image = "fondo.jpg"
@@ -27,8 +13,8 @@ object home {
 object configurador {
     var property indicador = 1
     // ===== VARIABLES PARA GUARDAR LAS ELECCIONES DEL JUGADOR =====
-    var hechiceroElegido = null
-    var guerreroElegido = null
+    var property hechiceroElegido = null
+    var property guerreroElegido = null
 
     // <<<--- NUEVAS VARIABLES PARA LOS ENEMIGOS (POR CATEGORÍA) ---<<<
     const property opcionesDeHechicero = [magoOscuro, nemegis, nikxomus, thiagurius]
@@ -53,80 +39,59 @@ object configurador {
 
     method mostrarSeleccionDeMapa() {
         game.clear()
-        io.clear()
         game.addVisual(fondoSeleccionMapa)
-        mapaPuente.position(game.at(2, 1))   
-        mapaCastillo.position(game.at(10, 1))  
-        mapaGalaxy.position(game.at(2, 6))   
-        mapaInfierno.position(game.at(10, 6))
-        
-        // Muestra las 4 imágenes de mapa
-        opcionesDeMapa.forEach({ mapita => game.addVisual(mapita) })
 
-        // seleccion ed mapas
-        keyboard.num1().onPressDo { self.seleccionarMapa(opcionesDeMapa.get(0)) }
-        keyboard.num2().onPressDo { self.seleccionarMapa(opcionesDeMapa.get(1)) }
-        keyboard.num3().onPressDo { self.seleccionarMapa(opcionesDeMapa.get(2)) }
-        keyboard.num4().onPressDo { self.seleccionarMapa(opcionesDeMapa.get(3)) }
-    }
-    
-    method seleccionarMapa(mapa) {
-        mapaElegido = mapa.image() // Guardamos el mapa elegido
-        self.mostrarSeleccionDeHechicero()
+        const posicionCentral = game.at(2, 1)
+
+        // Definimos qué acción se ejecutará al presionar Enter
+        const accionAlElegirMapa = { mapaElegido =>
+            self.mapaElegido(mapaElegido.mapa())
+            self.mostrarSeleccionDeHechicero()
+        }
+
+        sistemaSeleccion.iniciar(selectorDeMapas.mapas(), posicionCentral, accionAlElegirMapa)
     }
 
     method mostrarSeleccionDeHechicero() {
-        game.clear()
-        io.clear()
-        game.addVisual(fondoSeleccionHechicero)
-        game.addVisual(magoOscuro)
-        game.addVisual(nemegis)
-        game.addVisual(nikxomus)
-        game.addVisual(thiagurius)
-        keyboard.num1().onPressDo { self.seleccionarHechicero(1) }
-        keyboard.num2().onPressDo { self.seleccionarHechicero(2) }
-        keyboard.num3().onPressDo { self.seleccionarHechicero(3) }
-        keyboard.num4().onPressDo { self.seleccionarHechicero(4) }
-    }
+    game.clear()
+    game.addVisual(fondoSeleccionHechicero)
 
-    method seleccionarHechicero(numero) {
-        if(numero==1){
-            hechiceroElegido = magoOscuro
-        }else if(numero==2){
-            hechiceroElegido = nemegis         
-        }else if(numero==3){
-            hechiceroElegido = nikxomus
-        }else if(numero==4){
-            hechiceroElegido = thiagurius
-        }
+    const posicionCentral = game.at(5, 1)
+
+    // Definimos qué acción se ejecutará al presionar Enter para el HECHICERO
+    const accionAlElegirHechicero = { hechicero =>
+        self.hechiceroElegido(hechicero)
+        // Al elegir el hechicero, pasamos a la siguiente pantalla
         self.mostrarSeleccionDeGuerrero()
     }
 
-    method mostrarSeleccionDeGuerrero() {
-        game.clear()
-        io.clear()
-        game.addVisual(fondoSeleccionGuerrero)
-        game.addVisual(halfdan)
-        game.addVisual(santhurius)
-        game.addVisual(soldadoBrilloNegro)
-        game.addVisual(malaika)
-        keyboard.num1().onPressDo { self.seleccionarGuerrero(1) }
-        keyboard.num2().onPressDo { self.seleccionarGuerrero(2) }
-        keyboard.num3().onPressDo { self.seleccionarGuerrero(3) }
-        keyboard.num4().onPressDo { self.seleccionarGuerrero(4) }
+    // Iniciamos el selector para los HECHICEROS
+    sistemaSeleccion.iniciar(
+        opcionesDeHechicero,
+        posicionCentral,
+        accionAlElegirHechicero
+    )
     }
-    
-    method seleccionarGuerrero(numero) {
-        if(numero==1){
-            guerreroElegido = halfdan
-        }else if(numero==2){
-            guerreroElegido = santhurius       
-        }else if(numero==3){
-            guerreroElegido = soldadoBrilloNegro
-        }else if(numero==4){
-            guerreroElegido = malaika
-        }
-        self.seleccionarEnemigosAleatorios()       
+
+    method mostrarSeleccionDeGuerrero() {
+    game.clear()
+    game.addVisual(fondoSeleccionGuerrero)
+
+    const posicionCentral = game.at(5, 1)
+
+    // Definimos qué acción se ejecutará al presionar Enter para el GUERRERO
+    const accionAlElegirGuerrero = { guerrero =>
+        self.guerreroElegido(guerrero)
+        // Al elegir el guerrero, pasamos a la pantalla de rivales
+        self.seleccionarEnemigosAleatorios()
+    }
+
+    // Iniciamos el selector para los GUERREROS
+    sistemaSeleccion.iniciar(
+        opcionesDeGuerrero,
+        posicionCentral,
+        accionAlElegirGuerrero
+    )
     }
 
     // <<<--- MÉTODO MODIFICADO ---<<<
@@ -145,14 +110,21 @@ object configurador {
         io.clear()
         game.addVisual(fondoSeleccionRival)
 
-        hechiceroRival.position(game.at(3, 3))
+        hechiceroRival.position(game.at(1, 1))
         game.addVisual(hechiceroRival)
-        guerreroRival.position(game.at(10, 3))
+        guerreroRival.position(game.at(9, 1))
         game.addVisual(guerreroRival)
 
         // Preparamos el listener para comenzar el juego
+        keyboard.enter().onPressDo { self.mostrarInstrucciones() }
+    }
+
+    method mostrarInstrucciones() {
+        game.clear()
+        game.addVisual(fondoInstrucciones)
         keyboard.enter().onPressDo { self.activarCombate() }
     }
+
 
     method inicializarJuego() {
         game.title("PrimerPantalla")
@@ -161,36 +133,63 @@ object configurador {
         //game.ground("suelo.png")
     }
 
-    method inicializarSeleccionador() {
-        game.addVisual(seleccionador)
-        keyboard.r().onPressDo { io.removeEventHandler(['keypress', "ArrowRight"]) }
-        keyboard.e().onPressDo { io.removeEventHandler(['keypress', "ArrowLeft"]) }
-        keyboard.t().onPressDo { gameManager.mostrarMenu() }
-        keyboard.up().onPressDo { seleccionador.moverse(arriba) }
-        keyboard.down().onPressDo { seleccionador.moverse(abajo) }
-        keyboard.enter().onPressDo { self.activarCombate() }
-        seleccionador.activarSeleccionAtaque()
-    }
     method activarCombate() {
         game.clear()
-        game.ground(mapaElegido) 
+        //console.println(mapaElegido)
+        mapa.establecerFondoMapa(mapaElegido)
         //game.addVisual(feed)
         turnero.empezarCombate([guerreroElegido, hechiceroElegido], [hechiceroRival, guerreroRival])
     }
     method seleccionarRival(accion) {
-        self.desactivarAcciones()
-        var objetivo = null
-        keyboard.a().onPressDo { objetivo = turnero.enemigos().get(0); self.corroborarAtaque(objetivo, accion) }
-        keyboard.s().onPressDo { objetivo = turnero.enemigos().get(1); self.corroborarAtaque(objetivo, accion) }
-        keyboard.d().onPressDo { objetivo = turnero.enemigos().get(2); self.corroborarAtaque(objetivo, accion) }
-        keyboard.c().onPressDo { self.desactivarAcciones(); turnero.personajeActivo().activarAcciones() }
+        // 1. Obtenemos la lista de enemigos que están vivos.
+        const objetivosVivos = turnero.enemigosVivos()
+        
+        // Si no hay objetivos vivos, devolvemos el control al jugador.
+        if (objetivosVivos.isEmpty()) {
+            turnero.personajeActivo().activarAcciones()
+        }
+
+        // 2. Inicializamos el selector en el primer enemigo vivo.
+        var indiceSeleccionado = 0
+        selectorDeObjetivo.position(objetivosVivos.get(indiceSeleccionado).position())
+        game.addVisual(selectorDeObjetivo)
+
+        // 3. Definimos una función de limpieza para reutilizarla.
+        const limpiarSeleccion = {
+            game.removeVisual(selectorDeObjetivo)
+        }
+
+        // 4. Configuramos los controles del teclado.
+        keyboard.left().onPressDo {
+            // Movimiento circular hacia la izquierda
+            indiceSeleccionado = (indiceSeleccionado - 1 + objetivosVivos.size()) % objetivosVivos.size()
+            selectorDeObjetivo.position(objetivosVivos.get(indiceSeleccionado).position())
+        }
+        keyboard.right().onPressDo {
+            // Movimiento circular hacia la derecha
+            indiceSeleccionado = (indiceSeleccionado + 1) % objetivosVivos.size()
+            selectorDeObjetivo.position(objetivosVivos.get(indiceSeleccionado).position())
+        }
+        keyboard.enter().onPressDo {
+            // Confirmar el ataque
+            const objetivoElegido = objetivosVivos.get(indiceSeleccionado)
+            limpiarSeleccion.apply()
+            self.corroborarAtaque(objetivoElegido, accion)
+        }
+        keyboard.c().onPressDo {
+            // Cancelar y volver al menú de acciones
+            limpiarSeleccion.apply()
+            turnero.personajeActivo().activarAcciones()
+        }
     }
     
     method corroborarAtaque(objetivo, accion) {
-        self.desactivarAcciones()
+        // La limpieza de inputs ahora se maneja antes de llamar a este método.
+        io.clear() 
         if (objetivo.salud() == 0) {
             const atacante = turnero.personajeActivo()
             game.say(atacante, "No puedo atacar a un muerto")
+            // Devolvemos el control al jugador para que elija otra acción.
             atacante.empezarTurnoAliado()
         } else if (objetivo.salud() > 0) {
             accion.apply(objetivo)
@@ -218,11 +217,13 @@ object configurador {
     }
     method cambiarPosicionesAliado(aliado) {
         aliado.position(game.at(1, indicador))
+        aliado.image(aliado.imagenSeleccionador())
         indicador += 5
     }
 
     method cambiarPosicionesEnemigo(enemigo) {
         enemigo.position(game.at(7, indicador))
+        enemigo.image(enemigo.imagenSeleccionador())
         indicador += 5
     }
     method reiniciarIndicador() {
@@ -234,3 +235,4 @@ object configurador {
         game.start()
     }
 }
+

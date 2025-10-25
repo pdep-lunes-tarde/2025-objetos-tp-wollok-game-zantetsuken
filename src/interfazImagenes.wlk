@@ -170,14 +170,14 @@ object hollowKnightBackground{
 // ===== NUEVOS OBJETOS PARA LA PANTALLA DE SELECCIÓN DE HECHICERO =====
 
 object fondoSeleccionHechicero {
-    const property image = "primerPantallaSeleccion.gif" // Puedes usar el mismo fondo romano o uno nuevo
+    const property image = "primerPantallaSeleccion0.gif" // Puedes usar el mismo fondo romano o uno nuevo
     const property position = game.at(0, 0)
 }
 
 // ===== NUEVOS OBJETOS PARA LA PANTALLA DE SELECCIÓN DE GUERRERO =====
 
 object fondoSeleccionGuerrero {
-    const property image = "segundaPantallaSeleccion2.gif" // Puedes usar el mismo fondo romano o uno nuevo
+    const property image = "segundaPantallaSeleccion0.gif" // Puedes usar el mismo fondo romano o uno nuevo
     const property position = game.at(0, 0)
 }
 
@@ -193,7 +193,64 @@ object fondoResumen {
 // ===== NUEVO OBJETO PARA LA PANTALLA DE SELECCIÓN DE RIVAL =====
 object fondoSeleccionRival {
     // Reemplaza "fondoRival.gif" con tu imagen cuando la tengas
-    const property image = "pantallaCartasDelRival.gif" // Placeholder
+    const property image = "pantallaCartasDelRival01.gif" // Placeholder
     const property position = game.at(0, 0)
 }
 
+object selectorDeObjetivo {
+    var property position = game.at(0, 0)
+    
+    // IMPORTANTE: Reemplaza "selectorDeObjetivo.png" con la imagen de tu cursor/marco.
+    // Puede ser una flecha, un marco brillante, etc.
+    const property image = "marcoSeleccionador0.png" 
+}
+
+// ... (código existente en interfazImagenes.wlk) ...
+
+// ===== NUEVO MENÚ DE ACCIONES VISUAL =====
+
+// Componentes individuales del menú
+object teclaZ {
+    // IMPORTANTE: Asegúrate de tener una imagen llamada "tecla_z.png" en tu carpeta de assets.
+    const property image = "tecla_z0.png" 
+    const property position = game.at(12, 1)
+}
+
+object textoAtaqueBasico {
+    const property position = game.at(14, 1) // Posición ajustada para quedar al lado de la tecla
+    method text() = "ATAQUE BASICO"
+    method textColor() = "FFFFFF" // Color blanco para resaltar
+}
+
+object teclaX {
+    // IMPORTANTE: Asegúrate de tener una imagen llamada "tecla_x.png" en tu carpeta de assets.
+    const property image = "tecla_x.png"
+    const property position = game.at(12, 0)
+}
+
+object textoAtaqueEspecial {
+    const property position = game.at(14, 0) // Posición ajustada para quedar al lado de la tecla
+    method text() = "ATAQUE ESPECIAL"
+    method textColor() = "FFFFFF" // Color blanco para resaltar
+}
+
+// Objeto contenedor que gestiona todo el menú
+object menuDeAcciones {
+    // Lista de todos los componentes visuales del menú
+    const componentes = [teclaZ, textoAtaqueBasico, teclaX, textoAtaqueEspecial]
+
+    // Método para mostrar el menú en pantalla
+    method mostrar() {
+        componentes.forEach({ componente => game.addVisual(componente) })
+    }
+
+    // Método para ocultar el menú de la pantalla
+    method ocultar() {
+        componentes.forEach({ componente => game.removeVisual(componente) })
+    }
+}
+
+object fondoInstrucciones{
+    const property image = "instrucciones.gif"
+    const property position = game.at(0, 0)
+}

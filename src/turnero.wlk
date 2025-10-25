@@ -34,6 +34,8 @@ object turnero {
 
     method personajeActivo() = self.turnos().get(self.turnoActual())
 
+    method enemigosVivos() = self.enemigos().filter { enemigo => enemigo.salud() > 0 }
+
     method correrTurno(){
         if(self.personajeActivo().salud() == 0){
             self.pasarTurno()
@@ -47,18 +49,23 @@ object turnero {
     method tamanioDelCombate() = enemigos.size() + aliados.size() -1
 
     method pasarTurno() {
-    if(enemigos.all({enemigo => enemigo.salud() == 0})) {
-        game.removeVisual(indicadorTurno)
-        self.combateVictorioso()
-    } else if (aliados.all({aliado => aliado.salud() == 0})) {
-        self.combateVictorioso() //atentos aca
-        game.removeVisual(indicadorTurno)
-    } else {
-        self.ciclarTurnos()
-        // Actualizar el indicador de turno
-        indicadorTurno.actualizarFlecha()
-        self.correrTurno()
-    }
+        // <<<--- LÓGICA PARA OCULTAR EL MENÚ AL FINALIZAR TURNO ---<<<
+         if (turnero.aliados().contains(self.personajeActivo())) {
+            menuDeAcciones.ocultar()
+        }
+
+        if(enemigos.all({enemigo => enemigo.salud() == 0})) {
+            game.removeVisual(indicadorTurno)
+            self.combateVictorioso()
+        } else if (aliados.all({aliado => aliado.salud() == 0})) {
+            self.combateVictorioso() //atentos aca
+            game.removeVisual(indicadorTurno)
+        } else {
+            self.ciclarTurnos()
+            // Actualizar el indicador de turno
+            indicadorTurno.actualizarFlecha()
+            self.correrTurno()
+        }
     }
 
     method ciclarTurnos(){
