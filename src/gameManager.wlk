@@ -41,7 +41,7 @@ object configurador {
     var property hechiceroRival = null
     var property guerreroRival = null
 
-    method ancho() = 20
+    method ancho() = 16
     method alto() = 10
 
 
