@@ -217,12 +217,12 @@ object configurador {
         game.addVisual(feed)
     }
     method cambiarPosicionesAliado(aliado) {
-        aliado.position(game.at(3, indicador))
+        aliado.position(game.at(1, indicador))
         indicador += 5
     }
 
     method cambiarPosicionesEnemigo(enemigo) {
-        enemigo.position(game.at(10, indicador))
+        enemigo.position(game.at(7, indicador))
         indicador += 5
     }
     method reiniciarIndicador() {

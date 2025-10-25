@@ -26,24 +26,24 @@ class Carta {
     // Ataque básico: consume energía y causa daño igual a ataque
     method ataqueBasico(rival) {
         if (!self.puedeAtacarBasico()) {
-            logsFeed.agregarLog(self.nombre() + " no tiene energía para un ataque básico.")
+            game.say(self, "No tengo suficiente energia")
         }
         self.energia(self.energia() - self.costoBasico())
         self.animacionDeAtaque()
+        logsFeed.agregarLog(self.nombre() + " realiza ataque basico")
         game.schedule(500, { rival.recibirAtaque(self.ataque()) })
-        logsFeed.agregarLog(self.nombre() + " realiza ataque básico causando " + self.ataque() + " a " + rival)
     }
 
     // Ataque especial: por defecto más costoso y más daño (puede override)
     method ataqueEspecial(rival) {
         if (!self.puedeAtacarEspecial()) {
-            logsFeed.agregarLog(self.nombre() + " no tiene energía para un ataque especial.")
+            game.say(self, "No tengo suficiente energia")
         }
         self.energia(self.energia() - self.costoEspecial())
         const dano = self.aEntero(self.ataque() * 1.8)
         self.animacionDeAtaque()
+        logsFeed.agregarLog(self.nombre() + " realiza ataque especial")
         game.schedule(500, { rival.recibirAtaque(dano) })
-        logsFeed.agregarLog(self.nombre() + " realiza ataque especial causando " + dano + " a " + rival)
     }
 
     method puedeAtacarBasico() = self.energia() >= self.costoBasico()
@@ -58,7 +58,7 @@ class Carta {
         // Fórmula de mitigación: daño * 100 / (100 + defensa)
         const danoReal = self.aEntero(((danio * 100) / (100 + self.defensa())).max(0))
         self.daniar(danoReal)
-        logsFeed.agregarLog(self.nombre() + " recibe " + danoReal + " de daño real (entrada: " + danio + ").")
+        logsFeed.agregarLog(self.nombre() + " recibe " + danoReal + " de daño")
     }
 
     method daniar(danio) {
@@ -66,7 +66,7 @@ class Carta {
         salud = (self.salud()-danio).max(0)
         if (self.salud() == 0) {
             self.matar()
-            logsFeed.agregarLog(self.nombre() + " ha sido derrotado.")
+            logsFeed.agregarLog(self.nombre() + " ha sido derrotado")
         }
     }
 

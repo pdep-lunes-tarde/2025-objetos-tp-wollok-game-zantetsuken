@@ -47,17 +47,20 @@ object turnero {
     method tamanioDelCombate() = enemigos.size() + aliados.size() -1
 
     method pasarTurno() {
-        if(enemigos.all({enemigo => enemigo.salud() == 0})) {
-            game.removeVisual(indicadorTurno)
-            self.combateVictorioso()
-        } else if (aliados.all({aliado => aliado.salud() == 0})) {
-            self.combateVictorioso()//atentos aca
-            game.removeVisual(indicadorTurno)
-        } else {
-            self.ciclarTurnos()
-            self.correrTurno()
-        }
+    if(enemigos.all({enemigo => enemigo.salud() == 0})) {
+        game.removeVisual(indicadorTurno)
+        self.combateVictorioso()
+    } else if (aliados.all({aliado => aliado.salud() == 0})) {
+        self.combateVictorioso() //atentos aca
+        game.removeVisual(indicadorTurno)
+    } else {
+        self.ciclarTurnos()
+        // Actualizar el indicador de turno
+        indicadorTurno.actualizarFlecha()
+        self.correrTurno()
     }
+    }
+
     method ciclarTurnos(){
         if (turnoActual == self.tamanioDelCombate()){
             self.turnoActual(0)
@@ -87,11 +90,41 @@ object activarAcciones {
 }
 
 object indicadorTurno {
-	method position() = game.at(14,0)
-	
-	method text() = "Le toca el turno a " + turnero.personajeActivo()
-    method textColor() = "FFFFFF" 
-	method activar(){
-		game.addVisual(self)
-	}
+    const property position = game.at(5, 5)
+    var property image = "flechaAD0.png" // Imagen por defecto
+    
+    // Imágenes de flechas para cada dirección
+    const flechaAbajoIzquierda = "flechaAI0.png"
+    const flechaArribaIzquierda = "flechaARI0.png"
+    const flechaAbajoDerecha = "flechaAD0.png"
+    const flechaArribaDerecha = "flechaARD0.png"
+    
+    method activar() {
+        game.addVisual(self)
+        self.actualizarFlecha()
+    }
+    
+    method actualizarFlecha() {
+        const personajeActivo = turnero.personajeActivo()
+        const posicion = personajeActivo.position()
+        
+        // Determinar qué flecha mostrar según la posición del personaje activo
+        if (posicion.x() == 1 && posicion.y() == 1) {
+            // Aliado inferior izquierda
+            image = flechaAbajoIzquierda
+        } else if (posicion.x() == 1 && posicion.y() == 6) {
+            // Aliado superior izquierda
+            image = flechaArribaIzquierda
+        } else if (posicion.x() == 7 && posicion.y() == 1) {
+            // Enemigo inferior derecha
+            image = flechaAbajoDerecha
+        } else if (posicion.x() == 7 && posicion.y() == 6) {
+            // Enemigo superior derecha
+            image = flechaArribaDerecha
+        }
+        
+        // Actualizar la imagen en pantalla
+        game.removeVisual(self)
+        game.addVisual(self)
+    }
 }

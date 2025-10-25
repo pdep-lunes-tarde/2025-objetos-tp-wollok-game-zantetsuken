@@ -86,14 +86,14 @@ object primerPantalla {
 }
 
 object feed {
-    const property position = game.at(16, 0)
+    const property position = game.at(11, 0)
     method image() = "registroDelCombate.jpg"
 }
 
 class Log {
     var property palabras
     var property y
-    const property x = 1
+    const property x = 13
 
     var property position = game.at(x, y)
 
