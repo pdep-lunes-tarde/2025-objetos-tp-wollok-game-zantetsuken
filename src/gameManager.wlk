@@ -41,7 +41,7 @@ object configurador {
     var property hechiceroRival = null
     var property guerreroRival = null
 
-    method ancho() = 16
+    method ancho() = 20
     method alto() = 10
 
 
@@ -185,12 +185,13 @@ object configurador {
         keyboard.d().onPressDo { objetivo = turnero.enemigos().get(2); self.corroborarAtaque(objetivo, accion) }
         keyboard.c().onPressDo { self.desactivarAcciones(); turnero.personajeActivo().activarAcciones() }
     }
+    
     method corroborarAtaque(objetivo, accion) {
         self.desactivarAcciones()
         if (objetivo.salud() == 0) {
             const atacante = turnero.personajeActivo()
             game.say(atacante, "No puedo atacar a un muerto")
-            atacante.empezarTurno()
+            atacante.empezarTurnoAliado()
         } else if (objetivo.salud() > 0) {
             accion.apply(objetivo)
             game.schedule(7000, { turnero.pasarTurno() })
@@ -206,13 +207,22 @@ object configurador {
         game.removeVisual(criatura)
     }
     method mostrarPersonajes() {
-        turnero.enemigos().forEach({ enemigo => self.cambiarPosiciones(enemigo) })
+        turnero.aliados().forEach({ aliado => self.cambiarPosicionesAliado(aliado) })
+        self.reiniciarIndicador()
+        turnero.enemigos().forEach({ enemigo => self.cambiarPosicionesEnemigo(enemigo) })
         self.reiniciarIndicador()
         turnero.turnos().forEach({ personaje => game.addVisual(personaje) })
         turnero.turnos().forEach({ personaje => game.addVisual(personaje.medidorDeSalud()) })
+        //game.width(self.ancho()+4)
+        game.addVisual(feed)
     }
-    method cambiarPosiciones(enemigo) {
-        enemigo.position(game.at(8, indicador))
+    method cambiarPosicionesAliado(aliado) {
+        aliado.position(game.at(3, indicador))
+        indicador += 5
+    }
+
+    method cambiarPosicionesEnemigo(enemigo) {
+        enemigo.position(game.at(10, indicador))
         indicador += 5
     }
     method reiniciarIndicador() {

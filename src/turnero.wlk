@@ -38,7 +38,9 @@ object turnero {
         if(self.personajeActivo().salud() == 0){
             self.pasarTurno()
         } else {
-            self.personajeActivo().empezarTurno()
+            if(turnero.aliados().contains(self.personajeActivo())){
+                self.personajeActivo().empezarTurnoAliado()
+            }else{self.personajeActivo().empezarTurnoEnemigo()}
         }
     }
 
