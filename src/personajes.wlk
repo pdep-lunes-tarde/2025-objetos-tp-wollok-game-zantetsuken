@@ -4,43 +4,42 @@ import turnero.*
 import gameManager.*
 
 class MedidorDeVida {
-	const usuario
-	method position() = game.at(usuario.position().x(), usuario.position().y() - 1)
+    const usuario
+    method position() = game.at(usuario.position().x(), usuario.position().y() - 1)
 
-	method text() = "            " + usuario.salud() + " / " + usuario.saludMaxima()
-	method textColor() = "14E507"
+    method text() = "            " + usuario.salud() + " / " + usuario.saludMaxima()
+    method textColor() = "14E507"
 }
 class Carta {
     const property nombre
-    const property tipo               // "guerrero", "tanque", "hechicero"
-    const property ataque             // valor de ataque (también usado como referencia)
-    const property defensa            // valor de defensa
-    var property energia              // energiaDeAtaque que se va consumiendo
+    const property tipo
+    const property ataque
+    const property defensa
+    var property energia
     var property salud
     var property velocidad
     const property saludMaxima
+    var property imagenBatalla
     var property imagenSeleccionador
     const property costoBasico = 100
     const property costoEspecial = 300
     const property medidorDeSalud = new MedidorDeVida(usuario = self)
 
-    // Ataque básico: consume energía y causa daño igual a ataque
     method ataqueBasico(rival) {
-        if (!self.puedeAtacarBasico()) {
-            game.say(self, "No tengo suficiente energia")
-        }
-        self.energia(self.energia() - self.costoBasico())
+        energia = energia - costoBasico
+        //console.println(energia)
         self.animacionDeAtaque()
         logsFeed.agregarLog(self.nombre() + " realiza ataque basico")
         game.schedule(500, { rival.recibirAtaque(self.ataque()) })
     }
 
-    // Ataque especial: por defecto más costoso y más daño (puede override)
     method ataqueEspecial(rival) {
         if (!self.puedeAtacarEspecial()) {
-            game.say(self, "No tengo suficiente energia")
+            game.say(self, "No tengo suficiente energia para un ataque especial")
+            self.ataqueBasico(rival)
         }
-        self.energia(self.energia() - self.costoEspecial())
+        energia = energia - costoEspecial
+        //console.println(energia)
         const dano = self.aEntero(self.ataque() * 1.8)
         self.animacionDeAtaque()
         logsFeed.agregarLog(self.nombre() + " realiza ataque especial")
@@ -54,9 +53,7 @@ class Carta {
     return numero - (numero % 1)
     }
 
-    // recibe ataque: aplica defensa y reduce salud
     method recibirAtaque(danio) {
-        // Fórmula de mitigación: daño * 100 / (100 + defensa)
         const danoReal = self.aEntero(((danio * 100) / (100 + self.defensa())).max(0))
         self.daniar(danoReal)
         logsFeed.agregarLog(self.nombre() + " recibe " + danoReal + " de daño")
@@ -86,29 +83,28 @@ class Carta {
 
     method matar(){
         salud = 0
+        game.removeVisual(self.medidorDeSalud())
         game.removeVisual(self)
     }
 
     method empezarTurnoAliado() {
-        // 1. Mostramos el menú de acciones para el jugador
         menuDeAcciones.mostrar()
         
-        // 2. Configuramos los listeners para las teclas Z y X
         keyboard.z().onPressDo {
             configurador.desactivarAcciones()
             configurador.seleccionarRival({ rival => self.ataqueBasico(rival) })
         }
-        keyboard.x().onPressDo { // <-- Tecla cambiada a 'X' para el ataque especial
+        keyboard.x().onPressDo {
             configurador.desactivarAcciones()
             configurador.seleccionarRival({ rival => self.ataqueEspecial(rival) })
         }
     }
 
     method empezarTurnoEnemigo() {
-        const objetivo = turnero.aliados().anyOne()
-		self.animacionDeAtaque()
-		game.schedule(3000, {self.ataqueBasico(objetivo)}) 
-		game.schedule(7000, {turnero.pasarTurno()})
+        const objetivo = turnero.aliadosVivos().anyOne()
+        self.animacionDeAtaque()
+        game.schedule(3000, {self.ataqueBasico(objetivo)}) 
+        game.schedule(7000, {turnero.pasarTurno()})
     }
 
     method recibioDanio(){
@@ -130,19 +126,19 @@ class Carta {
     }
 }
 
-// Definición de cartas como constantes compactas
 object magoOscuro inherits Carta(
     nombre = "Mago Oscuro", 
     tipo = "hechicero", 
     ataque = 2500, 
     defensa = 2100, 
-    energia = 2500, 
+    energia = 400, 
     velocidad = 10, 
-    salud = 2500, 
-    saludMaxima = 2500, 
+    salud = 1000, 
+    saludMaxima = 1000, 
+    imagenBatalla = "MagoOscuro2.jpg",
     imagenSeleccionador = "MagoOscuroSeleccion.jpg")
 {
-	var property image = "MagoOscuro2.jpg" // Reemplaza con tu imagen
+    var property image = imagenBatalla
     var property position = game.at(4, 1)
 }
 
@@ -153,11 +149,12 @@ object thiagurius inherits Carta(
     defensa = 4000, 
     energia = 5000, 
     velocidad = 8, 
-    salud = 5000, 
-    saludMaxima = 5000,
+    salud = 1500, 
+    saludMaxima = 1500,
+    imagenBatalla = "Thiagurius0.jpeg",
     imagenSeleccionador = "ThiaguriusSeleccion.jpeg"
 ){
-    var property image = "Thiagurius0.jpeg"
+    var property image = imagenBatalla
     var property position = game.at(4, 1)
 }
 
@@ -168,11 +165,12 @@ object nemegis inherits Carta(
     defensa = 4000, 
     energia = 3500, 
     velocidad = 4, 
-    salud = 3500, 
-    saludMaxima = 3500,
+    salud = 1500, 
+    saludMaxima = 1500,
+    imagenBatalla = "nemegis0.jpeg",
     imagenSeleccionador = "nemegisSeleccion.jpeg"
 ){
-    var property image = "nemegis0.jpeg"
+    var property image = imagenBatalla
     var property position = game.at(4, 1)
 }
 
@@ -183,11 +181,12 @@ object nikxomus inherits Carta(
     defensa = 2100, 
     energia = 7000, 
     velocidad = 5, 
-    salud = 7000, 
-    saludMaxima = 7000,
+    salud = 1500, 
+    saludMaxima = 1500,
+    imagenBatalla = "Nikxomus0.jpeg",
     imagenSeleccionador = "NikxomusSeleccion.jpeg"
 ){
-    var property image = "Nikxomus0.jpeg"
+    var property image = imagenBatalla
     var property position = game.at(4, 1)
 }
 
@@ -198,11 +197,12 @@ object santhurius inherits Carta(
     defensa = 4000, 
     energia = 9999, 
     velocidad = 6, 
-    salud = 9999, 
-    saludMaxima = 9999,
+    salud = 1500, 
+    saludMaxima = 1500,
+    imagenBatalla = "Santhurius0.jpeg",
     imagenSeleccionador = "SanthuriusSeleccion.jpeg"
 ){
-    var property image = "Santhurius0.jpeg"
+    var property image = imagenBatalla
     var property position = game.at(4, 1)
 }
 
@@ -213,11 +213,12 @@ object soldadoBrilloNegro inherits Carta(
     defensa = 2500, 
     energia = 3000, 
     velocidad = 7, 
-    salud = 3000, 
-    saludMaxima = 3000,
+    salud = 1200, 
+    saludMaxima = 1200,
+    imagenBatalla = "soldadoBrilloNegro0.jpg",
     imagenSeleccionador = "soldadoBrilloNegroSeleccion.jpg"
 ){
-    var property image = "soldadoBrilloNegro0.jpg"
+    var property image = imagenBatalla
     var property position = game.at(4, 1)
 }
 
@@ -228,11 +229,12 @@ object malaika inherits Carta(
     defensa = 1400, 
     energia = 3700, 
     velocidad = 7, 
-    salud = 3700, 
-    saludMaxima = 3700,
+    salud = 1100, 
+    saludMaxima = 1100,
+    imagenBatalla = "Malaika0.jpeg",
     imagenSeleccionador = "MalaikaSeleccion.jpeg"
 ){
-    var property image = "Malaika0.jpeg"
+    var property image = imagenBatalla
     var property position = game.at(4, 1)
 }
 
@@ -243,10 +245,11 @@ object halfdan inherits Carta(
     defensa = 200, 
     energia = 1300, 
     velocidad = 10, 
-    salud = 1300, 
-    saludMaxima = 1300,
+    salud = 500, 
+    saludMaxima = 500,
+    imagenBatalla = "halfdan0.jpeg",
     imagenSeleccionador = "halfdanSeleccion.jpeg"
 ){
-    var property image = "halfdan0.jpeg"
+    var property image = imagenBatalla
     var property position = game.at(4, 1)
 }

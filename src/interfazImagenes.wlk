@@ -3,21 +3,21 @@ import wollok.game.*
 import turnero.*
 
 object seleccionador {
-	var posicion = new Position(x=2, y=2)
-	method image() = "seleccionadorCuadradoA.png"
+    var posicion = new Position(x=2, y=2)
+    method image() = "seleccionadorCuadradoA.png"
 
-	method position() = posicion
+    method position() = posicion
 
-	method position(nuevaPosicion) {
+    method position(nuevaPosicion) {
         posicion = nuevaPosicion
     }
-	
-	method moverse(direccion) {
-		const nuevaPosicion = direccion.siguientePosicion(posicion)
-		posicion = self.posicionCorregida(nuevaPosicion)
-	}
+    
+    method moverse(direccion) {
+        const nuevaPosicion = direccion.siguientePosicion(posicion)
+        posicion = self.posicionCorregida(nuevaPosicion)
+    }
 
-	method posicionCorregida(posicionACorregir) {
+    method posicionCorregida(posicionACorregir) {
         const nuevaX = detenerMovimiento.aplicarA(posicionACorregir.x(), 3, 8)
         return new Position(x=nuevaX, y=posicion.y())
     }
@@ -136,8 +136,8 @@ object logsFeed {
     method agregarLog(texto){
         if(logsEnPantalla.size() == maxLogs){
             const primerElemento = logsEnPantalla.first()
-            game.removeVisual(primerElemento) // lo saco de pantalla
-            logsEnPantalla.remove(primerElemento) // lo saco de la lista
+            game.removeVisual(primerElemento)
+            logsEnPantalla.remove(primerElemento)
 
             self.subirTodos()
         }
@@ -152,99 +152,65 @@ object logsFeed {
     }
 }
 
-object soifongBackground{
-    const property image = "soifongFondo2.jpg"
-    const property position = game.at(0, 5)
+object fondoSeleccionMapa{
+    var property image = "selectorDeMapas2.gif"
+    var property position = game.at(0, 0)
 }
-
-object drGeroBackground{
-    const property image = "maestroRoshiIsla.jpg"
-    const property position = game.at(6, 0)
-}
-
-object hollowKnightBackground{
-    const property image = "knightBackground.jpg"
-    const property position = game.at(0, 0)
-}
-
-// ===== NUEVOS OBJETOS PARA LA PANTALLA DE SELECCIÓN DE HECHICERO =====
 
 object fondoSeleccionHechicero {
-    const property image = "primerPantallaSeleccion0.gif" // Puedes usar el mismo fondo romano o uno nuevo
+    const property image = "primerPantallaSeleccion0.gif"
     const property position = game.at(0, 0)
 }
-
-// ===== NUEVOS OBJETOS PARA LA PANTALLA DE SELECCIÓN DE GUERRERO =====
 
 object fondoSeleccionGuerrero {
-    const property image = "segundaPantallaSeleccion0.gif" // Puedes usar el mismo fondo romano o uno nuevo
+    const property image = "segundaPantallaSeleccion0.gif"
     const property position = game.at(0, 0)
 }
 
-
-
-// ===== NUEVO OBJETO PARA LA PANTALLA DE RESUMEN DE SELECCIÓN =====
 object fondoResumen {
-    // Reemplaza "fondoResumen.gif" con el nombre de tu archivo de imagen cuando lo tengas
-    const property image = "fondoSeleccionGuerrero.gif" // Placeholder
+    const property image = "fondoSeleccionGuerrero.gif"
     const property position = game.at(0, 0)
 }
 
-// ===== NUEVO OBJETO PARA LA PANTALLA DE SELECCIÓN DE RIVAL =====
 object fondoSeleccionRival {
-    // Reemplaza "fondoRival.gif" con tu imagen cuando la tengas
-    const property image = "pantallaCartasDelRival01.gif" // Placeholder
+    const property image = "pantallaCartasDelRival01.gif"
     const property position = game.at(0, 0)
 }
 
 object selectorDeObjetivo {
     var property position = game.at(0, 0)
-    
-    // IMPORTANTE: Reemplaza "selectorDeObjetivo.png" con la imagen de tu cursor/marco.
-    // Puede ser una flecha, un marco brillante, etc.
     const property image = "marcoSeleccionador0.png" 
 }
 
-// ... (código existente en interfazImagenes.wlk) ...
-
-// ===== NUEVO MENÚ DE ACCIONES VISUAL =====
-
-// Componentes individuales del menú
 object teclaZ {
-    // IMPORTANTE: Asegúrate de tener una imagen llamada "tecla_z.png" en tu carpeta de assets.
     const property image = "tecla_z0.png" 
     const property position = game.at(12, 1)
 }
 
 object textoAtaqueBasico {
-    const property position = game.at(14, 1) // Posición ajustada para quedar al lado de la tecla
+    const property position = game.at(14, 1)
     method text() = "ATAQUE BASICO"
-    method textColor() = "FFFFFF" // Color blanco para resaltar
+    method textColor() = "FFFFFF"
 }
 
 object teclaX {
-    // IMPORTANTE: Asegúrate de tener una imagen llamada "tecla_x.png" en tu carpeta de assets.
     const property image = "tecla_x.png"
     const property position = game.at(12, 0)
 }
 
 object textoAtaqueEspecial {
-    const property position = game.at(14, 0) // Posición ajustada para quedar al lado de la tecla
+    const property position = game.at(14, 0)
     method text() = "ATAQUE ESPECIAL"
-    method textColor() = "FFFFFF" // Color blanco para resaltar
+    method textColor() = "FFFFFF"
 }
 
-// Objeto contenedor que gestiona todo el menú
 object menuDeAcciones {
-    // Lista de todos los componentes visuales del menú
     const componentes = [teclaZ, textoAtaqueBasico, teclaX, textoAtaqueEspecial]
 
-    // Método para mostrar el menú en pantalla
     method mostrar() {
         componentes.forEach({ componente => game.addVisual(componente) })
     }
 
-    // Método para ocultar el menú de la pantalla
     method ocultar() {
         componentes.forEach({ componente => game.removeVisual(componente) })
     }

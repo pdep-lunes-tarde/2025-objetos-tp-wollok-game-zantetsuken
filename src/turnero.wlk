@@ -3,8 +3,8 @@ import src.gameManager.*
 import personajes.*
 
 object zombieBackground{
-	const property image = "zombieFondo.png"
-	const property position = game.at(6, 5) 
+    const property image = "zombieFondo.png"
+    const property position = game.at(6, 5) 
 }
 
 object turnero {
@@ -34,6 +34,8 @@ object turnero {
 
     method personajeActivo() = self.turnos().get(self.turnoActual())
 
+    method aliadosVivos() = self.aliados().filter { aliado => aliado.salud() > 0 }
+
     method enemigosVivos() = self.enemigos().filter { enemigo => enemigo.salud() > 0 }
 
     method correrTurno(){
@@ -49,8 +51,7 @@ object turnero {
     method tamanioDelCombate() = enemigos.size() + aliados.size() -1
 
     method pasarTurno() {
-        // <<<--- LÓGICA PARA OCULTAR EL MENÚ AL FINALIZAR TURNO ---<<<
-         if (turnero.aliados().contains(self.personajeActivo())) {
+        if (turnero.aliados().contains(self.personajeActivo())) {
             menuDeAcciones.ocultar()
         }
 
@@ -58,11 +59,10 @@ object turnero {
             game.removeVisual(indicadorTurno)
             self.combateVictorioso()
         } else if (aliados.all({aliado => aliado.salud() == 0})) {
-            self.combateVictorioso() //atentos aca
             game.removeVisual(indicadorTurno)
+            self.combateVictorioso()
         } else {
             self.ciclarTurnos()
-            // Actualizar el indicador de turno
             indicadorTurno.actualizarFlecha()
             self.correrTurno()
         }
@@ -78,6 +78,7 @@ object turnero {
 
     method combateVictorioso() {
         turnos.forEach({personaje => personaje.fullVida()})
+        turnos.forEach({personaje => personaje.image(personaje.imagenBatalla())})
         self.turnos().clear()
         logsFeed.limpiarLogs()
         configurador.primerPantalla()
@@ -98,9 +99,8 @@ object activarAcciones {
 
 object indicadorTurno {
     const property position = game.at(5, 5)
-    var property image = "flechaAD0.png" // Imagen por defecto
+    var property image = "flechaAD0.png"
     
-    // Imágenes de flechas para cada dirección
     const flechaAbajoIzquierda = "flechaAI0.png"
     const flechaArribaIzquierda = "flechaARI0.png"
     const flechaAbajoDerecha = "flechaAD0.png"
@@ -115,23 +115,17 @@ object indicadorTurno {
         const personajeActivo = turnero.personajeActivo()
         const posicion = personajeActivo.position()
         
-        // Determinar qué flecha mostrar según la posición del personaje activo
         if (posicion.x() == 1 && posicion.y() == 1) {
-            // Aliado inferior izquierda
             image = flechaAbajoIzquierda
         } else if (posicion.x() == 1 && posicion.y() == 6) {
-            // Aliado superior izquierda
             image = flechaArribaIzquierda
         } else if (posicion.x() == 7 && posicion.y() == 1) {
-            // Enemigo inferior derecha
             image = flechaAbajoDerecha
         } else if (posicion.x() == 7 && posicion.y() == 6) {
-            // Enemigo superior derecha
             image = flechaArribaDerecha
         }
         
-        // Actualizar la imagen en pantalla
         game.removeVisual(self)
         game.addVisual(self)
     }
-}
+}   

@@ -2,5 +2,4 @@ import gameManager.*
 
 program juego {
 	configurador.jugar()
-//	START
 }

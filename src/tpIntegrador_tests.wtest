@@ -1,5 +1,122 @@
-import gameManager.*
+import personajes.*
+import turnero.*
+import mapas.*
+import sistemaSeleccionador.*
 
-test "Test de prueba" {
-	assert.equals(4, 2 + 2)
-}
+    // =================== TESTS DE PERSONAJES ===================
+    
+    describe "Carta de Personaje" {
+        
+        const guerreroDePrueba = new Carta(
+            nombre = "Guerrero Test",
+            tipo = "guerrero",
+            ataque = 1000,
+            defensa = 500,
+            energia = 1000,
+            salud = 2000,
+            saludMaxima = 2000,
+            velocidad = 5,
+            imagenBatalla = "test.jpg",
+            imagenSeleccionador = "test_sel.jpg"
+        )
+
+        test "un personaje recibe daño calculado correctamente con defensa" {
+            // Fórmula: (1000 * 100) / (100 + 500) = 100000 / 600 = 166.66... -> 166
+            const danioEsperado = 166
+            guerreroDePrueba.recibirAtaque(1000)
+            assert.equals(2000 - danioEsperado, guerreroDePrueba.salud())
+        }
+
+        test "un personaje se cura sin superar su vida máxima" {
+            guerreroDePrueba.daniar(500) // Salud actual: 1500
+            guerreroDePrueba.curar(300)  // Salud actual: 1800
+            assert.equals(1800, guerreroDePrueba.salud())
+        }
+
+        test "un personaje se cura hasta su vida máxima si la cura es excesiva" {
+            guerreroDePrueba.daniar(500) // Salud actual: 1500
+            guerreroDePrueba.curar(1000) // Intenta curar a 2500
+            assert.equals(guerreroDePrueba.saludMaxima(), guerreroDePrueba.salud())
+        }
+        
+        test "un personaje gasta energía al realizar un ataque básico" {
+            const energiaInicial = guerreroDePrueba.energia()
+            guerreroDePrueba.ataqueBasico(magoOscuro) // El rival no importa para este test
+            assert.equals(energiaInicial - guerreroDePrueba.costoBasico(), guerreroDePrueba.energia())
+        }
+        
+        test "un personaje muere al llegar su salud a cero" {
+            guerreroDePrueba.daniar(2000)
+            assert.equals(0, guerreroDePrueba.salud())
+        }
+    }
+
+    // =================== TESTS DEL TURNO ===================
+
+    describe "Turnero de Combate" {
+        
+        const personajeLento = nemegis
+		const personajeRapido = halfdan
+		const personajeMedio = malaika
+
+        test "el turnero ordena los turnos por velocidad de mayor a menor" {
+            // Se añaden en orden desordenado
+            turnero.agregarPersonaje(personajeLento)
+            turnero.agregarPersonaje(personajeRapido)
+            turnero.agregarPersonaje(personajeMedio)
+            
+            turnero.ordenarTurnos()
+            
+            assert.equals(personajeRapido, turnero.turnos().first())
+            assert.equals(personajeMedio, turnero.turnos().get(1))
+            assert.equals(personajeLento, turnero.turnos().last())
+        }
+        
+        test "el turnero cicla los turnos correctamente" {
+            turnero.aliados([personajeLento])
+            turnero.enemigos([personajeMedio])
+            turnero.turnos([personajeLento, personajeMedio])
+            turnero.turnoActual(0)
+            
+            assert.equals(personajeLento, turnero.personajeActivo())
+            
+            turnero.ciclarTurnos()
+            assert.equals(personajeMedio, turnero.personajeActivo())
+            assert.equals(1, turnero.turnoActual())
+            
+            turnero.ciclarTurnos()
+            assert.equals(personajeLento, turnero.personajeActivo())
+            assert.equals(0, turnero.turnoActual())
+        }
+    }
+
+    // =================== TESTS DE MAPAS ===================
+
+    describe "Selector de Mapas" {
+        
+        test "navegación de mapas hacia adelante (wraparound)" {
+            const selector = selectorDeMapas
+            selector.indiceActual(2) 
+            
+            assert.equals(mapa3, selector.mapaActual())
+            
+            selector.siguienteMapa() 
+            assert.equals(mapa4, selector.mapaActual())
+            
+            selector.siguienteMapa() 
+            assert.equals(mapa1, selector.mapaActual())
+        }
+        
+        test "navegación de mapas hacia atrás (wraparound)" {
+            const selector = selectorDeMapas
+            selector.indiceActual(1) 
+            
+            assert.equals(mapa2, selector.mapaActual())
+            
+            selector.anteriorMapa() 
+            assert.equals(mapa1, selector.mapaActual())
+            
+            selector.anteriorMapa() 
+            assert.equals(mapa4, selector.mapaActual())
+        }
+    }
