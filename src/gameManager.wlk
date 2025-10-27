@@ -168,6 +168,11 @@ object configurador {
     method jugar() {
         self.inicializarJuego()
         self.primerPantalla()
+
+        const musicaDeFondo = game.sound("medieval-ambient-236809.mp3")
+        musicaDeFondo.shouldLoop(true)
+        game.schedule (500, { musicaDeFondo.play() })
+
         game.start()
     }
 }
