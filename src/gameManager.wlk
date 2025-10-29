@@ -10,11 +10,14 @@ object configurador {
     var property hechiceroElegido = null
     var property guerreroElegido = null
 
-    const property opcionesDeHechicero = [magoOscuro, nemegis, nikxomus, thiagurius]
-    const property opcionesDeGuerrero = [halfdan, santhurius, soldadoBrilloNegro, malaika]
+    var property opcionesDeHechicero = null
+    var property opcionesDeGuerrero = null
+    var property selectorDeHechiceros = null
+    var property selectorDeGuerreros = null
+    var property equipo = null
 
     var property mapaElegido = null 
-    const property opcionesDeMapa = [mapa2, mapa3, mapa4, mapa1]
+    var property opcionesDeMapa = [mapa2, mapa3, mapa4, mapa1]
     
     var property hechiceroRival = null
     var property guerreroRival = null
@@ -28,8 +31,17 @@ object configurador {
         game.width(self.ancho())
     }
 
+    method inicializarPersonajesYSelectores(){
+        opcionesDeHechicero = [new MagoOscuro(), new Nemegis(), new Nikxomus(), new Thiagurius()]
+        opcionesDeGuerrero = [new Halfdan(), new Santhurius(), new SoldadoBrilloNegro(), new Malaika()]  
+
+        selectorDeHechiceros = new SelectorDeHechiceros(elementos = opcionesDeHechicero)
+        selectorDeGuerreros = new SelectorDeGuerreros(elementos = opcionesDeGuerrero) 
+    }
+
     method primerPantalla() {
         game.clear()
+        self.inicializarPersonajesYSelectores()
         game.addVisual(primerPantalla)
         keyboard.enter().onPressDo { self.mostrarSeleccionDeMapa() }
     }
@@ -85,16 +97,14 @@ object configurador {
     method activarCombate() {
         game.clear()
         mapa.establecerFondoMapa(mapaElegido)
-        turnero.empezarCombate([guerreroElegido, hechiceroElegido], [hechiceroRival, guerreroRival])
+        
+        equipo = new Equipo(aliados = [guerreroElegido, hechiceroElegido], enemigos = [guerreroRival, hechiceroRival])
+        turnero.empezarCombate(equipo)
     }
 
     method seleccionarRival(accion) {
         const objetivosVivos = turnero.enemigosVivos()
         
-        if (objetivosVivos.isEmpty()) {
-            turnero.personajeActivo().activarAcciones()
-        }
-
         var indiceSeleccionado = 0
         selectorDeObjetivo.position(objetivosVivos.get(indiceSeleccionado).position())
         game.addVisual(selectorDeObjetivo)
@@ -143,9 +153,9 @@ object configurador {
         game.removeVisual(criatura)
     }
     method mostrarPersonajes() {
-        turnero.aliados().forEach({ aliado => self.cambiarPosicionesAliado(aliado) })
+        equipo.aliados().forEach({ aliado => self.cambiarPosicionesAliado(aliado) })
         self.reiniciarIndicador()
-        turnero.enemigos().forEach({ enemigo => self.cambiarPosicionesEnemigo(enemigo) })
+        equipo.enemigos().forEach({ enemigo => self.cambiarPosicionesEnemigo(enemigo) })
         self.reiniciarIndicador()
         turnero.turnos().forEach({ personaje => game.addVisual(personaje) })
         turnero.turnos().forEach({ personaje => game.addVisual(personaje.medidorDeSalud()) })
@@ -153,13 +163,13 @@ object configurador {
     }
     method cambiarPosicionesAliado(aliado) {
         aliado.position(game.at(1, indicador))
-        aliado.image(aliado.imagenSeleccionador())
+        aliado.cambiarImagenABatalla()
         indicador += 5
     }
 
     method cambiarPosicionesEnemigo(enemigo) {
         enemigo.position(game.at(7, indicador))
-        enemigo.image(enemigo.imagenSeleccionador())
+        enemigo.cambiarImagenABatalla()
         indicador += 5
     }
     method reiniciarIndicador() {
@@ -176,4 +186,3 @@ object configurador {
         game.start()
     }
 }
-

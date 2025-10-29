@@ -25,6 +25,16 @@ class Carta {
     const property costoEspecial = 300
     const property medidorDeSalud = new MedidorDeVida(usuario = self)
 
+    
+    var image = imagenSeleccionador
+    var property position = game.at(5, 1) //posicion inicial para las pantallas de seleccion
+
+    method image() = image
+
+    method cambiarImagenABatalla() {
+        image = imagenBatalla
+    }
+
     method ataqueBasico(rival) {
         energia = energia - costoBasico
         //console.println(energia)
@@ -121,12 +131,11 @@ class Carta {
             })
     }
 
-    method animacionDeAtaque(){
-        
+    method animacionDeAtaque(){   
     }
 }
 
-object magoOscuro inherits Carta(
+class MagoOscuro inherits Carta(
     nombre = "Mago Oscuro", 
     tipo = "hechicero", 
     ataque = 2500, 
@@ -135,14 +144,12 @@ object magoOscuro inherits Carta(
     velocidad = 10, 
     salud = 1000, 
     saludMaxima = 1000, 
-    imagenBatalla = "MagoOscuro2.jpg",
-    imagenSeleccionador = "MagoOscuroSeleccion.jpg")
-{
-    var property image = imagenBatalla
-    var property position = game.at(4, 1)
-}
+    
+    imagenBatalla = "MagoOscuroSeleccion.jpg",
+    imagenSeleccionador = "MagoOscuro2.jpg")
+{}
 
-object thiagurius inherits Carta(
+class Thiagurius inherits Carta(
     nombre = "Thiagurius", 
     tipo = "hechicero", 
     ataque = 5000, 
@@ -151,14 +158,11 @@ object thiagurius inherits Carta(
     velocidad = 8, 
     salud = 1500, 
     saludMaxima = 1500,
-    imagenBatalla = "Thiagurius0.jpeg",
-    imagenSeleccionador = "ThiaguriusSeleccion.jpeg"
-){
-    var property image = imagenBatalla
-    var property position = game.at(4, 1)
-}
+    imagenBatalla = "ThiaguriusSeleccion.jpeg",
+    imagenSeleccionador = "Thiagurius0.jpeg"
+){}
 
-object nemegis inherits Carta(
+class Nemegis inherits Carta(
     nombre = "Nemegis", 
     tipo = "hechicero", 
     ataque = 3500, 
@@ -167,14 +171,11 @@ object nemegis inherits Carta(
     velocidad = 4, 
     salud = 1500, 
     saludMaxima = 1500,
-    imagenBatalla = "nemegis0.jpeg",
-    imagenSeleccionador = "nemegisSeleccion.jpeg"
-){
-    var property image = imagenBatalla
-    var property position = game.at(4, 1)
-}
+    imagenBatalla = "nemegisSeleccion.jpeg",
+    imagenSeleccionador = "nemegis0.jpeg"
+){}
 
-object nikxomus inherits Carta(
+class Nikxomus inherits Carta(
     nombre = "Nikxomus", 
     tipo = "hechicero", 
     ataque = 7000, 
@@ -183,14 +184,11 @@ object nikxomus inherits Carta(
     velocidad = 5, 
     salud = 1500, 
     saludMaxima = 1500,
-    imagenBatalla = "Nikxomus0.jpeg",
-    imagenSeleccionador = "NikxomusSeleccion.jpeg"
-){
-    var property image = imagenBatalla
-    var property position = game.at(4, 1)
-}
+    imagenBatalla = "NikxomusSeleccion.jpeg",
+    imagenSeleccionador = "Nikxomus0.jpeg"
+){}
 
-object santhurius inherits Carta(
+class Santhurius inherits Carta(
     nombre = "Santhurius", 
     tipo = "guerrero", 
     ataque = 9999, 
@@ -199,14 +197,11 @@ object santhurius inherits Carta(
     velocidad = 6, 
     salud = 1500, 
     saludMaxima = 1500,
-    imagenBatalla = "Santhurius0.jpeg",
-    imagenSeleccionador = "SanthuriusSeleccion.jpeg"
-){
-    var property image = imagenBatalla
-    var property position = game.at(4, 1)
-}
+    imagenBatalla = "SanthuriusSeleccion.jpeg",
+    imagenSeleccionador = "Santhurius0.jpeg"
+){}
 
-object soldadoBrilloNegro inherits Carta(
+class SoldadoBrilloNegro inherits Carta(
     nombre = "Soldado Brillo Negro", 
     tipo = "guerrero", 
     ataque = 3000, 
@@ -215,14 +210,11 @@ object soldadoBrilloNegro inherits Carta(
     velocidad = 7, 
     salud = 1200, 
     saludMaxima = 1200,
-    imagenBatalla = "soldadoBrilloNegro0.jpg",
-    imagenSeleccionador = "soldadoBrilloNegroSeleccion.jpg"
-){
-    var property image = imagenBatalla
-    var property position = game.at(4, 1)
-}
+    imagenBatalla = "soldadoBrilloNegroSeleccion.jpg",
+    imagenSeleccionador = "soldadoBrilloNegro0.jpg"
+){}
 
-object malaika inherits Carta(
+class Malaika inherits Carta(
     nombre = "Malaika", 
     tipo = "guerrero", 
     ataque = 3700, 
@@ -231,14 +223,11 @@ object malaika inherits Carta(
     velocidad = 7, 
     salud = 1100, 
     saludMaxima = 1100,
-    imagenBatalla = "Malaika0.jpeg",
-    imagenSeleccionador = "MalaikaSeleccion.jpeg"
-){
-    var property image = imagenBatalla
-    var property position = game.at(4, 1)
-}
+    imagenBatalla = "MalaikaSeleccion.jpeg",
+    imagenSeleccionador = "Malaika0.jpeg"
+){}
 
-object halfdan inherits Carta(
+class Halfdan inherits Carta(
     nombre = "Halfdan", 
     tipo = "guerrero", 
     ataque = 1300, 
@@ -247,9 +236,13 @@ object halfdan inherits Carta(
     velocidad = 10, 
     salud = 500, 
     saludMaxima = 500,
-    imagenBatalla = "halfdan0.jpeg",
-    imagenSeleccionador = "halfdanSeleccion.jpeg"
-){
-    var property image = imagenBatalla
-    var property position = game.at(4, 1)
+    imagenBatalla = "halfdanSeleccion.jpeg",
+    imagenSeleccionador = "halfdan0.jpeg"
+){}
+
+class Equipo {
+    var property aliados
+    var property enemigos
+
+    method cartasElegidas() = aliados + enemigos
 }

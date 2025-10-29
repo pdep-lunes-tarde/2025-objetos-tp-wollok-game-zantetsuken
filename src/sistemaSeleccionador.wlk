@@ -7,7 +7,6 @@ import mapas.*
 class SistemaDeSeleccion {
     var property elementos 
     var property indiceActual = 0
-    var property posicionElemento
     
     method iniciar() {
         indiceActual = 0
@@ -25,9 +24,6 @@ class SistemaDeSeleccion {
 
     method mostrarElementoActual() {
         game.removeVisual(self.elementoActual())
-
-        self.elementoActual().position(posicionElemento)
-
         game.addVisual(self.elementoActual())
     }
 
@@ -48,14 +44,16 @@ class SistemaDeSeleccion {
     method accionAlSeleccionar(elemento)
 }
 
-object selectorDeHechiceros inherits SistemaDeSeleccion (elementos = configurador.opcionesDeHechicero(), posicionElemento = game.at(5, 1)){
+class SelectorDeHechiceros inherits SistemaDeSeleccion (){
+
     override method accionAlSeleccionar(hechicero) {
         configurador.hechiceroElegido(hechicero)
         configurador.mostrarSeleccionDeGuerrero()
     }
 }
 
-object selectorDeGuerreros inherits SistemaDeSeleccion (elementos = configurador.opcionesDeGuerrero(), posicionElemento = game.at(5, 1)){
+class SelectorDeGuerreros inherits SistemaDeSeleccion (){
+
     override method accionAlSeleccionar(guerrero) {
         configurador.guerreroElegido(guerrero)
         configurador.seleccionarEnemigosAleatorios()

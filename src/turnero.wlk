@@ -10,16 +10,13 @@ object zombieBackground{
 object turnero {
     var property turnos = []
     var property turnoActual = 0
-    var property enemigos = []
-    var property aliados = []
+    var property equipo = null
     const property posicionesEnemigas = [8, 10]
 
-    method empezarCombate(cartasElegidas, cartasDelRival){
-        aliados = cartasElegidas
-        enemigos = cartasDelRival
+    method empezarCombate(equipoNuevo){
+        equipo = equipoNuevo
         turnoActual = 0
-        aliados.forEach {aliado => self.agregarPersonaje(aliado)}
-        enemigos.forEach {enemigo => self.agregarPersonaje(enemigo)}
+        equipo.cartasElegidas().forEach {personaje => self.agregarPersonaje(personaje)}
         configurador.mostrarPersonajes()
         self.ordenarTurnos()
         indicadorTurno.activar()
@@ -34,31 +31,28 @@ object turnero {
 
     method personajeActivo() = self.turnos().get(self.turnoActual())
 
-    method aliadosVivos() = self.aliados().filter { aliado => aliado.salud() > 0 }
+    method aliadosVivos() = equipo.aliados().filter { aliado => aliado.salud() > 0 }
 
-    method enemigosVivos() = self.enemigos().filter { enemigo => enemigo.salud() > 0 }
+    method enemigosVivos() = equipo.enemigos().filter { enemigo => enemigo.salud() > 0 }
 
     method correrTurno(){
         if(self.personajeActivo().salud() == 0){
             self.pasarTurno()
         } else {
-            if(turnero.aliados().contains(self.personajeActivo())){
+            if(equipo.aliados().contains(self.personajeActivo())){
                 self.personajeActivo().empezarTurnoAliado()
             }else{self.personajeActivo().empezarTurnoEnemigo()}
         }
     }
 
-    method tamanioDelCombate() = enemigos.size() + aliados.size() -1
+    method tamanioDelCombate() = equipo.cartasElegidas().size() - 1
 
     method pasarTurno() {
-        if (turnero.aliados().contains(self.personajeActivo())) {
+        if (equipo.aliados().contains(self.personajeActivo())) {
             menuDeAcciones.ocultar()
         }
 
-        if(enemigos.all({enemigo => enemigo.salud() == 0})) {
-            game.removeVisual(indicadorTurno)
-            self.combateVictorioso()
-        } else if (aliados.all({aliado => aliado.salud() == 0})) {
+        if(equipo.aliados().all({personaje => personaje.salud() == 0}) || equipo.enemigos().all({personaje => personaje.salud() == 0})){
             game.removeVisual(indicadorTurno)
             self.combateVictorioso()
         } else {
@@ -77,8 +71,6 @@ object turnero {
     }
 
     method combateVictorioso() {
-        turnos.forEach({personaje => personaje.fullVida()})
-        turnos.forEach({personaje => personaje.image(personaje.imagenBatalla())})
         self.turnos().clear()
         logsFeed.limpiarLogs()
         configurador.primerPantalla()
@@ -112,20 +104,35 @@ object indicadorTurno {
     }
     
     method actualizarFlecha() {
-        const personajeActivo = turnero.personajeActivo()
-        const posicion = personajeActivo.position()
         
-        if (posicion.x() == 1 && posicion.y() == 1) {
+        if (self.estaAbajoIzquierda()) {
             image = flechaAbajoIzquierda
-        } else if (posicion.x() == 1 && posicion.y() == 6) {
+        } else if (self.estaArribaIzquierda()) {
             image = flechaArribaIzquierda
-        } else if (posicion.x() == 7 && posicion.y() == 1) {
+        } else if (self.estaAbajoDerecha()) {
             image = flechaAbajoDerecha
-        } else if (posicion.x() == 7 && posicion.y() == 6) {
+        } else if (self.estaArribaDerecha()) {
             image = flechaArribaDerecha
         }
         
         game.removeVisual(self)
         game.addVisual(self)
     }
-}   
+
+    method estaAbajoIzquierda() {
+        return (turnero.personajeActivo().position().x() == 1 && turnero.personajeActivo().position().y() == 1)
+    }
+
+    method estaArribaIzquierda() {
+        return (turnero.personajeActivo().position().x() == 1 && turnero.personajeActivo().position().y() == 6)
+    }
+
+    method estaAbajoDerecha() {
+        return (turnero.personajeActivo().position().x() == 7 && turnero.personajeActivo().position().y() == 1)
+    }
+
+    method estaArribaDerecha() {
+        return (turnero.personajeActivo().position().x() == 7 && turnero.personajeActivo().position().y() == 6)
+    }
+}
+   
