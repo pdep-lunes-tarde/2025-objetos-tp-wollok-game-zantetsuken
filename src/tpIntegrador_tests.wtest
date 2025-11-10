@@ -41,7 +41,8 @@ import sistemaSeleccionador.*
         
         test "un personaje gasta energía al realizar un ataque básico" {
             const energiaInicial = guerreroDePrueba.energia()
-            guerreroDePrueba.ataqueBasico(magoOscuro) // El rival no importa para este test
+            const mago = new MagoOscuro()
+            guerreroDePrueba.ataqueBasico(mago) // El rival no importa para este test
             assert.equals(energiaInicial - guerreroDePrueba.costoBasico(), guerreroDePrueba.energia())
         }
         
@@ -55,9 +56,9 @@ import sistemaSeleccionador.*
 
     describe "Turnero de Combate" {
         
-        const personajeLento = nemegis
-		const personajeRapido = halfdan
-		const personajeMedio = malaika
+        const personajeLento = new Nemegis()
+		const personajeRapido = new Halfdan()
+		const personajeMedio = new Malaika()
 
         test "el turnero ordena los turnos por velocidad de mayor a menor" {
             // Se añaden en orden desordenado
@@ -73,8 +74,8 @@ import sistemaSeleccionador.*
         }
         
         test "el turnero cicla los turnos correctamente" {
-            turnero.aliados([personajeLento])
-            turnero.enemigos([personajeMedio])
+            //turnero.aliados([personajeLento])
+            //turnero.enemigos([personajeMedio])
             turnero.turnos([personajeLento, personajeMedio])
             turnero.turnoActual(0)
             

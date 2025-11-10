@@ -52,8 +52,10 @@ object turnero {
             menuDeAcciones.ocultar()
         }
 
+
         if(equipo.aliados().all({personaje => personaje.salud() == 0}) || equipo.enemigos().all({personaje => personaje.salud() == 0})){
             game.removeVisual(indicadorTurno)
+            game.addVisual(finDelJuego)
             self.combateVictorioso()
         } else {
             self.ciclarTurnos()

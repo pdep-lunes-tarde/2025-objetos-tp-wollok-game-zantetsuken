@@ -4,7 +4,28 @@ import turnero.*
 
 object primerPantalla {
     const property position = game.at(0,0)
-    method image() = "pantallaDeInicio1.gif"
+    method image() = "init1.gif"
+}
+
+object fondoVictoria {
+    const property image = "fondoVictoria.gif"
+    const property position = game.at(0, 0)
+    method width() = configurador.ancho()
+    method height() = configurador.alto()
+}
+
+object fondoDerrota {
+    const property image = "fondoDerrota.gif"
+    const property position = game.at(0, 0)
+    method width() = configurador.ancho()
+    method height() = configurador.alto()
+}   
+
+object finDelJuego {
+    const property position = game.at(0,0)
+    method image() = "finDelJuego0.gif"
+    method width() = configurador.ancho()
+    method height() = configurador.alto()
 }
 
 object feed {
