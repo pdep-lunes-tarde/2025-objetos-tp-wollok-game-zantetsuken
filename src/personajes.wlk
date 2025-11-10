@@ -10,6 +10,19 @@ class MedidorDeVida {
     method text() = "            " + usuario.salud() + " / " + usuario.saludMaxima()
     method textColor() = "14E507"
 }
+
+class MedidorDeEnergia {
+    const usuario
+    method position() = game.at(usuario.position().x()+1.5, usuario.position().y() - 1)
+
+    method text() = "            " + usuario.energia() + " / " + usuario.energiaMaxima()
+    method textColor() = "0000FF"
+}
+
+
+
+
+
 class Carta {
     const property nombre
     const property tipo
@@ -25,6 +38,9 @@ class Carta {
     const property costoEspecial = 300
     const property medidorDeSalud = new MedidorDeVida(usuario = self)
 
+    const property medidorDeEnergia = new MedidorDeEnergia(usuario = self)
+    const property energiaMaxima = 0
+
     
     var image = imagenSeleccionador
     var property position = game.at(5, 1) //posicion inicial para las pantallas de seleccion
@@ -36,7 +52,7 @@ class Carta {
     }
 
     method ataqueBasico(rival) {
-        energia = energia - costoBasico
+        energia = (energia - costoBasico).max(0)
         //console.println(energia)
         self.animacionDeAtaque()
         logsFeed.agregarLog(self.nombre() + " realiza ataque basico")
@@ -45,10 +61,10 @@ class Carta {
 
     method ataqueEspecial(rival) {
         if (!self.puedeAtacarEspecial()) {
-            game.say(self, "No tengo suficiente energia para un ataque especial")
+            game.say(self, "No tengo mucha energia para un ataque especial, realizo ataque basico")
             self.ataqueBasico(rival)
         }
-        energia = energia - costoEspecial
+        energia = (energia - costoEspecial).max(0)
         //console.println(energia)
         const dano = self.aEntero(self.ataque() * 1.8)
         self.animacionDeAtaque()
@@ -146,7 +162,8 @@ class MagoOscuro inherits Carta(
     saludMaxima = 1000, 
     
     imagenBatalla = "MagoOscuroSeleccion.jpg",
-    imagenSeleccionador = "MagoOscuro2.jpg")
+    imagenSeleccionador = "MagoOscuro2.jpg",
+    energiaMaxima = 400)
 {}
 
 class Thiagurius inherits Carta(
@@ -159,7 +176,8 @@ class Thiagurius inherits Carta(
     salud = 1500, 
     saludMaxima = 1500,
     imagenBatalla = "ThiaguriusSeleccion.jpeg",
-    imagenSeleccionador = "Thiagurius0.jpeg"
+    imagenSeleccionador = "Thiagurius0.jpeg",
+    energiaMaxima = 1500
 ){}
 
 class Nemegis inherits Carta(
@@ -172,7 +190,8 @@ class Nemegis inherits Carta(
     salud = 1500, 
     saludMaxima = 1500,
     imagenBatalla = "nemegisSeleccion.jpeg",
-    imagenSeleccionador = "nemegis0.jpeg"
+    imagenSeleccionador = "nemegis0.jpeg",
+    energiaMaxima = 1500
 ){}
 
 class Nikxomus inherits Carta(
@@ -185,7 +204,8 @@ class Nikxomus inherits Carta(
     salud = 1500, 
     saludMaxima = 1500,
     imagenBatalla = "NikxomusSeleccion.jpeg",
-    imagenSeleccionador = "Nikxomus0.jpeg"
+    imagenSeleccionador = "Nikxomus0.jpeg",
+    energiaMaxima = 1500
 ){}
 
 class Santhurius inherits Carta(
@@ -198,7 +218,8 @@ class Santhurius inherits Carta(
     salud = 1500, 
     saludMaxima = 1500,
     imagenBatalla = "SanthuriusSeleccion.jpeg",
-    imagenSeleccionador = "Santhurius0.jpeg"
+    imagenSeleccionador = "Santhurius0.jpeg",
+    energiaMaxima = 9999
 ){}
 
 class SoldadoBrilloNegro inherits Carta(
@@ -211,7 +232,8 @@ class SoldadoBrilloNegro inherits Carta(
     salud = 1200, 
     saludMaxima = 1200,
     imagenBatalla = "soldadoBrilloNegroSeleccion.jpg",
-    imagenSeleccionador = "soldadoBrilloNegro0.jpg"
+    imagenSeleccionador = "soldadoBrilloNegro0.jpg",
+    energiaMaxima = 600
 ){}
 
 class Malaika inherits Carta(
@@ -224,7 +246,8 @@ class Malaika inherits Carta(
     salud = 1100, 
     saludMaxima = 1100,
     imagenBatalla = "MalaikaSeleccion.jpeg",
-    imagenSeleccionador = "Malaika0.jpeg"
+    imagenSeleccionador = "Malaika0.jpeg",
+    energiaMaxima = 500
 ){}
 
 class Halfdan inherits Carta(
@@ -237,7 +260,8 @@ class Halfdan inherits Carta(
     salud = 500, 
     saludMaxima = 500,
     imagenBatalla = "halfdanSeleccion.jpeg",
-    imagenSeleccionador = "halfdan0.jpeg"
+    imagenSeleccionador = "halfdan0.jpeg",
+    energiaMaxima = 800
 ){}
 
 class Equipo {

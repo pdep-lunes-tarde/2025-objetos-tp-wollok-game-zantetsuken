@@ -159,6 +159,7 @@ object configurador {
         self.reiniciarIndicador()
         turnero.turnos().forEach({ personaje => game.addVisual(personaje) })
         turnero.turnos().forEach({ personaje => game.addVisual(personaje.medidorDeSalud()) })
+        turnero.turnos().forEach({ personaje => game.addVisual(personaje.medidorDeEnergia()) })
         game.addVisual(feed)
     }
     method cambiarPosicionesAliado(aliado) {
